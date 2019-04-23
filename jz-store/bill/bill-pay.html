@@ -37,11 +37,11 @@
 				</div>
 				<div class="mui-input-row">
 					<label>订单金额</label>
-					<p>¥{{showData.dispose}}</p>
+					<p>¥{{showData.amount}}</p>
 				</div>
 				<div class="mui-input-row">
 					<label>实际服务</label>
-					<p>¥{{showData.total_amount}}</p>
+					<p>¥{{showData.detail_amount}}</p>
 				</div>
 				<div class="mui-input-row">
 					<label>应付金额</label>
@@ -101,8 +101,8 @@
 //			console.log("lll" + JSON.stringify(_data))
 			if(_code == "402") vm.displayData.is_onLine_pay = false;
 			vm.showData = _data;
-			vm.showData.dispose = Number(vm.showData.dispose || (vm.showData.total_amount - vm.showData.need_pay_amount)).toFixed(2);
-			vm.showData.total_amount = Number(vm.showData.total_amount).toFixed(2);
+			vm.showData.amount = Number(vm.showData.amount).toFixed(2);
+			vm.showData.detail_amount = Number(vm.showData.detail_amount).toFixed(2);
 			vm.showData.need_pay_amount = Number(vm.showData.need_pay_amount).toFixed(2);
 		})
 		$("#finish,#finish2").on("tap",function () {
