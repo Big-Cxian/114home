@@ -3,8 +3,8 @@
     "id" : "H552A1F18", /*应用的标识，创建应用时自动生成，勿手动修改*/
     "name" : "114到家-工程师", /*应用名称，程序桌面图标名称*/
     "version" : {
-        "name" : "1.0.0", /*应用版本名称*/
-        "code" : 89
+        "name" : "1.0.2", /*应用版本名称*/
+        "code" : 91
     },
     "description" : "", /*应用描述信息*/
     "icons" : {
@@ -163,7 +163,7 @@
                         "notification" : "unpackage/res/icons/20x20.png",
                         "notification@2x" : "unpackage/res/icons/40x40.png"
                     },
-                    "appstore" : "unpackage/res/icons/1024x1024.png"
+                    "appstore" : "unpackage/res/iOS/icon1024x1024.png"
                 },
                 "android" : {
                     "mdpi" : "unpackage/res/icons/48x48.png", /*普通屏程序图标，分辨率：48x48*/
