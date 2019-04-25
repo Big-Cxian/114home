@@ -1,0 +1,82 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<link rel="stylesheet" href="../css/mui.min.css" />
+	<link rel="stylesheet" href="../css/app.css" />
+  <style type="text/css">
+    .mui-content {
+      padding-bottom: 60px;
+    }
+    .promotion-service-title>div{
+      justify-content: flex-start;
+      margin: 8px 0;
+    }
+    .mui-checkbox .promotion-service-btn input {
+      top: calc(50% - 14px);
+    }
+  </style>
+</head>
+
+<body>
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"><span class="font14">返回</span></a>
+		<h1 class="mui-title">活动促销</h1>
+	</header>
+	<div id="myapp" class="mui-content padding-left-right">
+    <label class="promotion-service-list mui-input-row mui-checkbox bg-white">
+      <img src="../images/sample.png" width="80px" height="80px" >
+      <div class="promotion-service-title">
+        <h5 class="mui-ellipsis mui-ellipsis-1 color333">活动名称活动名称活动名称活动名称</h5>
+        <div>
+          <div class="red bold margin-right-15">￥<span class="font16">999</span></div>
+          <div class="font12">销量:754</div>
+        </div>
+        <p class="margin0 font12 mui-ellipsis mui-ellipsis-1">一切都像新的一样！</p>
+      </div>
+      <div class="promotion-service-btn">
+        <input type="checkbox">
+      </div>
+    </label>
+    <label class="promotion-service-list mui-input-row mui-checkbox bg-white">
+      <img src="../images/sample.png" width="80px" height="80px" >
+      <div class="promotion-service-title">
+        <h5 class="mui-ellipsis mui-ellipsis-1 color333">活动名称活动名称活动名称活动名称</h5>
+        <div>
+          <div class="red bold margin-right-15">￥<span class="font16">999</span></div>
+          <div class="font12">销量:754</div>
+        </div>
+        <p class="margin0 font12 mui-ellipsis mui-ellipsis-1">一切都像新的一样！</p>
+      </div>
+      <div class="promotion-service-btn">
+        <input type="checkbox">
+      </div>
+    </label>
+	</div>
+  <div class="mui-content-padded button-fix">
+  	<button type="button" class="mui-btn mui-btn-warning mui-btn-block buttom-button" id="save">
+  		<i class="mui-icon mui-icon-checkmarkempty"></i>
+  		确认选择
+  	</button>
+  </div>
+<script type="text/javascript" src="../js/mui.min.js"></script>
+<script type="text/javascript" src="../js/vue.min.js"></script>
+<script type="text/javascript" src="../js/jquery-3.3.1.min.js" ></script>
+<script type="text/javascript" src="../js/app.js" ></script>
+<script type="text/javascript">
+	mui.init();
+  var vm = new Vue({
+  	el: '#myapp',
+  	data: {
+  		listData: []
+  	}
+  })
+	mui.plusReady(function (){
+    
+	})
+</script>
+</body>
+
+</html>

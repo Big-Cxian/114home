@@ -1,9 +1,52 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<title></title>
-	</head>
-	<body>
-	</body>
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<link rel="stylesheet" href="../css/mui.min.css" />
+	<link rel="stylesheet" href="../css/app.css" />
+</head>
+
+<body>
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"><span class="font14">返回</span></a>
+		<h1 class="mui-title">活动促销</h1>
+	</header>
+	<div id="myapp" class="mui-content padding-left-right">
+		<div class="promotion-list">
+      <span>8折</span>
+      <div class="promotion-title">
+        <h5 class="mui-ellipsis mui-ellipsis-1">活动名称活动名称</h5>
+        <p>2018.11.01-2018.11.30</p>
+      </div>
+      <div class="promotion-tag"></div>
+		</div>
+    <div class="promotion-list over">
+      <span>8折</span>
+      <div class="promotion-title">
+        <h5 class="mui-ellipsis mui-ellipsis-1">活动名称活动名称</h5>
+        <p>2018.11.01-2018.11.30</p>
+      </div>
+      <div class="promotion-tag"></div>
+    </div>
+	</div>
+<script type="text/javascript" src="../js/mui.min.js"></script>
+<script type="text/javascript" src="../js/vue.min.js"></script>
+<script type="text/javascript" src="../js/jquery-3.3.1.min.js" ></script>
+<script type="text/javascript" src="../js/app.js" ></script>
+<script type="text/javascript">
+	mui.init();
+  var vm = new Vue({
+  	el: '#myapp',
+  	data: {
+  		listData: []
+  	}
+  })
+	mui.plusReady(function (){
+    
+	})
+</script>
+</body>
+
 </html>

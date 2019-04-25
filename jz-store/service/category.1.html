@@ -1,0 +1,76 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<link rel="stylesheet" href="../css/mui.min.css" />
+	<link rel="stylesheet" href="../css/app.css" />
+  <style type="text/css">
+  	.service-category {
+      padding: 15px;
+      margin-bottom: 10px;
+      background-color: #fff;
+    }
+    .service-category h4 i {
+      display: inline-block;
+      float: left;
+      margin-right: 10px;
+      width: 3px;
+      height: 15px;
+      background-color: #7776FD;
+      border-radius: 3px;
+    }
+    .service-category-list {
+      display: flex;
+      flex-flow: wrap;
+    }
+    .service-category-list-item {
+      padding: 8px 13px;
+      color: #333;
+    }
+  </style>
+</head>
+
+<body>
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"><span class="font14">返回</span></a>
+		<h1 class="mui-title">服务分类</h1>
+	</header>
+	<div id="myapp" class="mui-content">
+		<div class="service-category">
+			<h4 class="font16 color333"><i></i>家电安装</h4>
+      <div class="service-category-list">
+        <label class="service-category-list-item">
+          电视安装
+          <input type="checkbox" name="" id="" value="" />
+        </label>
+      </div>
+		</div>
+	</div>
+	<div class="mui-content-padded button-fix mui-hidden" style="z-index: 99;">
+		<button type="button" class="mui-btn mui-btn-success mui-btn-block buttom-button" id="save">
+			<i class="mui-icon mui-icon-checkmarkempty"></i>
+			确认
+		</button>
+	</div>
+<script type="text/javascript" src="../js/mui.min.js"></script>
+<script type="text/javascript" src="../js/vue.min.js" ></script>
+<script type="text/javascript" src="../js/jquery-3.3.1.min.js" ></script>
+<script type="text/javascript" src="../js/mui.picker.min.js" ></script>
+<script type="text/javascript" src="../js/mui.poppicker.js" ></script>
+<script type="text/javascript" src="../js/app.js" ></script>
+<script type="text/javascript">
+  var vm = new Vue({
+  	el: '#myapp',
+  	data: {
+  	}
+  })
+	mui.init();
+	mui.plusReady(function (){
+    
+  })
+</script>
+</body>
+
+</html>

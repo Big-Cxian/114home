@@ -1,0 +1,123 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<link rel="stylesheet" href="../css/mui.min.css" />
+	<link rel="stylesheet" href="../css/app.css" />
+  <style type="text/css">
+    .mui-content {
+      padding-bottom: 60px;
+    }
+  	.mui-input-row input{
+      color: #333;
+    }
+    .mui-card {
+      border-radius: 4px;
+    }
+  </style>
+</head>
+
+<body>
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"><span class="font14">返回</span></a>
+		<h1 class="mui-title">活动促销</h1>
+	</header>
+	<div id="myapp" class="mui-content padding-left-right">
+		<div class="mui-card margin0 margin-bottom-10 margin-top-10">
+			<ul class="image-list mui-clearfix margin0">
+				<li>
+					<img src="../images/sample.png" />
+				</li>
+        <li>
+        	<img src="../images/sample.png" />
+        </li>
+        <li>
+        	<img src="../images/sample.png" />
+        </li>
+			</ul>
+		</div>
+    <div class="mui-card margin0">
+    	<form class="mui-input-group no-border-before no-border-after">
+    		<div class="mui-input-row">
+    			<label>活动主题</label>
+    			<input type="text" placeholder="活动主题" >
+    		</div>
+    		<div class="mui-input-row">
+    			<label>关键字段</label>
+    			<input type="text" placeholder="共享，优惠，促销" >
+    		</div>
+    		<div class="mui-input-row">
+    			<label>活动折扣</label>
+    			<input type="number" placeholder="几折" >
+    		</div>
+    		<div class="mui-input-row">
+    			<label>活动时间</label>
+    			<input type="number" placeholder="2018.11.01 - 2018.11.30" >
+    		</div>
+    		<div class="mui-input-row">
+    			<label>活动描述</label>
+          <div class="promotion-content">
+          	<span>活动描述</span>
+          	<i class="mui-icon mui-icon-arrowdown mui-pull-right font20"></i>
+          </div>
+    		</div>
+    	</form>
+    </div>
+    <div class="promotion-service-list">
+      <img src="../images/sample.png" width="80px" height="80px" >
+      <div class="promotion-service-title">
+        <h5 class="mui-ellipsis mui-ellipsis-1 color333">活动名称活动名称活动名称活动名称</h5>
+        <p class="margin0 font12 mui-ellipsis mui-ellipsis-1 line-height-20">一切都像新的一样！</p>
+        <div class="font12 margin-top-5">
+          <div class="red bold">￥<span class="font16">999</span></div>
+          <div class="font12">原价<span class="line-through">￥99.99</span></div>
+          <div class="font12">销量:754</div>
+        </div>
+      </div>
+      <div class="promotion-service-btn">
+        <button type="button">取消</button>
+      </div>
+    </div>
+    <div class="promotion-service-list">
+      <img src="../images/sample.png" width="80px" height="80px" >
+      <div class="promotion-service-title">
+        <h5 class="mui-ellipsis mui-ellipsis-1 color333">活动名称活动名称活动名称活动名称</h5>
+        <p class="margin0 font12 mui-ellipsis mui-ellipsis-1 line-height-20">一切都像新的一样！</p>
+        <div class="font12 margin-top-5">
+          <div class="red bold">￥<span class="font16">999</span></div>
+          <div class="font12">原价<span class="line-through">￥99.99</span></div>
+          <div class="font12">销量:754</div>
+        </div>
+      </div>
+      <div class="promotion-service-btn">
+        <button type="button">取消</button>
+      </div>
+    </div>
+	</div>
+  <div class="mui-content-padded button-fix">
+  	<button type="button" class="mui-btn mui-btn-purple mui-btn-block buttom-button" id="save">
+  		<i class="mui-icon mui-icon-checkmarkempty"></i>
+  		选择参与服务
+  	</button>
+  </div>
+<script type="text/javascript" src="../js/mui.min.js"></script>
+<script type="text/javascript" src="../js/vue.min.js"></script>
+<script type="text/javascript" src="../js/jquery-3.3.1.min.js" ></script>
+<script type="text/javascript" src="../js/app.js" ></script>
+<script type="text/javascript">
+	mui.init();
+  var vm = new Vue({
+  	el: '#myapp',
+  	data: {
+  		listData: []
+  	}
+  })
+	mui.plusReady(function (){
+    
+	})
+</script>
+</body>
+
+</html>
