@@ -231,6 +231,9 @@
 	});
 	mui.plusReady(function (){
 		var heard = plus.webview.currentWebview();
+    // console.log(JSON.stringify(heard));
+    vm.displayData.category_id = heard.category_id || vm.displayData.category_id;
+    vm.displayData.category_name = heard.category_name || vm.displayData.category_name;
 		if(heard.isNew) {
 			vm.isAdd = true;
 			$("#head-title").html("添加服务");

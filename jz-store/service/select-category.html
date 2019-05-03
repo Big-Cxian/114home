@@ -1,0 +1,140 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<link rel="stylesheet" href="../css/mui.min.css" />
+	<link rel="stylesheet" href="../css/app.css" />
+  <style type="text/css">
+    .mui-content {
+      padding-bottom: 60px;
+    }
+  	.service-category {
+      padding: 15px;
+      margin-bottom: 10px;
+      background-color: #fff;
+    }
+    .service-category h4 i {
+      display: inline-block;
+      float: left;
+      margin-right: 10px;
+      width: 3px;
+      height: 15px;
+      background-color: #7776FD;
+      border-radius: 3px;
+    }
+    .service-category-list {
+      display: flex;
+      flex-flow: wrap;
+      padding: 10px 0 0 0;
+    }
+		.btn label {
+      padding: 0 12px;
+			margin: 0 5px 10px 0;
+			display: block;
+			height: 30px;
+			border-radius: 15px;
+			text-align: center;
+			line-height: 28px;
+			font-size: 12px;
+			color: #333;
+      border: 1px solid #E6E6E6;
+      position: relative;
+		}
+    .btn label i{
+      position: absolute;
+      top: 3px;
+      right: 5px;
+      font-size: 10px;
+      color: red;
+      font-weight: bold;
+    }
+		.btn input {
+			display: none;
+		}
+		.btn label.active{
+			background-color: #7776FD;
+			color: #fff;
+		}
+  </style>
+</head>
+
+<body>
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"><span class="font14">返回</span></a>
+		<h1 class="mui-title">服务分类</h1>
+	</header>
+	<div id="myapp" class="mui-content">
+		<div class="service-category" v-for="(item,index) in categoryData" :key="item.id">
+			<h4 class="font16 color333"><i></i>{{item.name}}</h4>
+      <div class="service-category-list">
+        <div class="btn" v-for="(subItem,subIndex) in item.child" :key="subItem.id" @click="where(index,subIndex,subItem.id,subItem.name)">
+          <label :class="subItem.id == checkedId ? 'active' : '' ">
+            {{subItem.name}}
+            <i class="mui-icon mui-icon-plusempty" v-if="subItem.child"></i>
+          </label>
+        </div>
+      </div>
+		</div>
+    <p class="font12 padding-left-right color999">*如无分类，请联系客服40000116114</p>
+	</div>
+	<div class="mui-content-padded button-fix" style="z-index: 99;">
+		<button type="button" class="mui-btn mui-btn-success mui-btn-block buttom-button" id="save">
+			<i class="mui-icon mui-icon-checkmarkempty"></i>
+			确认
+		</button>
+	</div>
+<script type="text/javascript" src="../js/mui.min.js"></script>
+<script type="text/javascript" src="../js/vue.min.js" ></script>
+<script type="text/javascript" src="../js/jquery-3.3.1.min.js" ></script>
+<script type="text/javascript" src="../js/mui.picker.min.js" ></script>
+<script type="text/javascript" src="../js/mui.poppicker.js" ></script>
+<script type="text/javascript" src="../js/app.js" ></script>
+<script type="text/javascript">
+  var vm = new Vue({
+  	el: '#myapp',
+  	data: {
+      categoryData: [],
+      checkedId: "",
+      checkedName: ""
+  	},
+    methods: {
+      where: function(_i,_j,_id,_name) {
+        vm.checkedId = _id;
+        vm.checkedName = _name;
+        if(this.categoryData[_i].child[_j].child) {
+          vm.checkedId = "";
+          vm.checkedName = "";
+          openWindow("select-category-children.html","select-category-children",{
+            categoryData: vm.categoryData,
+            i: _i,
+            j: _j
+          })
+        }
+      }
+    }
+  })
+	mui.init();
+	mui.plusReady(function (){
+    var heard = plus.webview.currentWebview();
+    if(heard.categoryData) {
+      vm.categoryData = heard.categoryData;
+    } else {
+      doAjax("/company/serviceCategory/list","",function (_data) {
+      	// console.log(JSON.stringify(_data))
+        vm.categoryData = _data;
+      },"get")
+    }
+    $("#save").on("tap",function(){
+      openWindow("add-service.html","add-service",{
+        category_id: vm.checkedId,
+        category_name: vm.checkedName,
+        "isNew": true,
+      })
+    })
+  })
+</script>
+</body>
+
+</html>

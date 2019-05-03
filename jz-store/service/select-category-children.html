@@ -7,6 +7,9 @@
 	<link rel="stylesheet" href="../css/mui.min.css" />
 	<link rel="stylesheet" href="../css/app.css" />
   <style type="text/css">
+    .mui-content {
+      padding-bottom: 60px;
+    }
   	.service-category {
       padding: 15px;
       margin-bottom: 10px;
@@ -24,11 +27,27 @@
     .service-category-list {
       display: flex;
       flex-flow: wrap;
+      padding: 10px 0 0 0;
     }
-    .service-category-list-item {
-      padding: 8px 13px;
-      color: #333;
-    }
+		.btn label {
+      padding: 0 12px;
+			margin: 0 5px 10px 0;
+			display: block;
+			height: 30px;
+			border-radius: 15px;
+			text-align: center;
+			line-height: 28px;
+			font-size: 12px;
+			color: #333;
+      border: 1px solid #E6E6E6;
+		}
+		.btn input {
+			display: none;
+		}
+		.btn label.active{
+			background-color: #7776FD;
+			color: #fff;
+		}
   </style>
 </head>
 
@@ -39,16 +58,18 @@
 	</header>
 	<div id="myapp" class="mui-content">
 		<div class="service-category">
-			<h4 class="font16 color333"><i></i>家电安装</h4>
+			<h4 class="font16 color333"><i></i>{{childData.name}}</h4>
       <div class="service-category-list">
-        <label class="service-category-list-item">
-          电视安装
-          <input type="checkbox" name="" id="" value="" />
-        </label>
+        <div class="btn" v-for="(subItem,subIndex) in childData.child" :key="subItem.id" @click="where(subItem.id,subItem.name)">
+          <label :class="subItem.id == checkedId ? 'active' : '' ">
+            {{subItem.name}}
+          </label>
+        </div>
       </div>
 		</div>
+    <p class="font12 padding-left-right color999">*如无分类，请联系客服40000116114</p>
 	</div>
-	<div class="mui-content-padded button-fix mui-hidden" style="z-index: 99;">
+	<div class="mui-content-padded button-fix" style="z-index: 99;">
 		<button type="button" class="mui-btn mui-btn-success mui-btn-block buttom-button" id="save">
 			<i class="mui-icon mui-icon-checkmarkempty"></i>
 			确认
@@ -64,11 +85,30 @@
   var vm = new Vue({
   	el: '#myapp',
   	data: {
-  	}
+      categoryData: [],
+      childData: [],
+      checkedId: "",
+      checkedName: ""
+  	},
+    methods: {
+      where: function(_id,_name) {
+        vm.checkedId = _id;
+        vm.checkedName = _name;
+      }
+    }
   })
 	mui.init();
 	mui.plusReady(function (){
-    
+    var heard = plus.webview.currentWebview();
+    vm.categoryData = heard.categoryData;
+    vm.childData = heard.categoryData[heard.i].child[heard.j];
+    $("#save").on("tap",function(){
+      openWindow("add-service.html","add-service",{
+        category_id: vm.checkedId,
+        category_name: vm.checkedName,
+        "isNew": true,
+      })
+    })
   })
 </script>
 </body>
