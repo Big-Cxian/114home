@@ -11,6 +11,19 @@
       padding-left: 15px;
       padding-right: 15px;
     }
+    .cash-out-account {
+      position: relative;
+    }
+    .cash-out-account>i {
+      position: absolute;
+      top: 26px;
+      right: 5px;
+      font-size: 40px;
+    }
+    textarea {
+      border: 0;
+      padding: 10px;
+    }
   </style>
 </head>
 
@@ -20,18 +33,21 @@
 		<h1 class="mui-title">提现</h1>
 	</header>
 	<div id="myapp" class="mui-content" v-cloak>
-    <div class="cash-out-account">
-      提款账户信息
-      <div>mayun@zhifubao.com</div>
+    <div class="cash-out-account" @click="goAccout">
+      {{bankInfo.bank}}
+      <div>{{bankInfo.bank_card || "0000" | secrecy}}</div>
+      <i class="mui-icon mui-icon-arrowright"></i>
     </div>
     <p class="cash-out-total">
-      <span class="red">123456.00元</span>当前可提现金额
+      当前可提现金额：<span class="red">{{financeInfo.balance || "0.00"}}元</span>
     </p>
     <div class="cash-out-money">
     	<label>提现金额</label>
-      <input type="text" placeholder="请输入体现金额" />
+      <input type="text" v-model="money" placeholder="请输入提现金额" />
     </div>
-    <button type="button" class="mui-btn mui-btn-red mui-btn-block buttom-button margin-top-20">
+    <p class="font12 margin-top-10">最低提现金额：{{financeInfo.min_deposit}}元</p>
+    <textarea rows="4" cols="" class="font14" placeholder="提现备注"></textarea>
+    <button type="button" class="mui-btn mui-btn-red mui-btn-block buttom-button margin-top-20" id="save">
     	<i class="mui-icon mui-icon-checkmarkempty"></i>
     	确认提现
     </button>
@@ -45,13 +61,46 @@
   var vm = new Vue({
   	el: '#myapp',
   	data: {
-  		type: "out",
+      financeInfo: "",
+      bankInfo: "",
+      money: "",
+      remark: ""
   	},
     methods: {
+      goAccout: function() {
+        openWindow("bank-account.html","bank-account.html",{
+          bankInfo: vm.bankInfo
+        })
+      }
+    },
+    filters: {
+      secrecy: function(_val) {
+        return "尾号" + _val.substr(_val.length - 4) + "存蓄卡"
+      }
     }
   })
 	mui.plusReady(function (){
-    
+    var heard = plus.webview.currentWebview();
+    console.log(JSON.stringify(heard.data));
+    vm.financeInfo = heard.data;
+    doAjax("/company/store/getBank",{_token: UserInfo.data._token},function(_data){
+      // console.log(JSON.stringify(_data));
+      vm.bankInfo = _data;
+    })
+    $("#save").on("tap",function(){
+      if(vm.money < vm.financeInfo.min_deposit) {
+        mui.toast("提现金额不得低于" + vm.financeInfo.min_deposit + "元")
+        return;
+      }
+      doAjax("/company/withdraw/add",{
+        amount: vm.money,
+        remark: vm.remark
+      },function(_data,_msg){
+        mui.toast(_msg);
+        mui.fire(plus.webview.getWebviewById("finance-detail"), 'reload');
+        mui.back();
+      })
+    })
   })
 </script>
 </body>

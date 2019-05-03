@@ -14,6 +14,13 @@
       padding-left: 15px;
       padding-right: 15px;
     }
+    .cash-out-list,
+    .entry-list {
+      overflow-y: scroll;
+    }
+    ul li:last-child {
+      border-bottom: 0;
+    }
   </style>
 </head>
 
@@ -27,23 +34,23 @@
     	<div class="fiance-tilte margin-bottom-10">账户余额</div>
     	<div class="fiance-total">
         <div>
-          ￥<span>123456.00</span>
+          ￥<span>{{financeInfo.balance || "0.00"}}</span>
         </div>
         <div>
-          <button>提现</button>
+          <button id="goDraw">提现</button>
         </div>
       </div>
     	<div class="fiance-money">
         <div>
           <div class="fiance-tilte">累计入账金额</div>
           <div class="fiance-money-text">
-            ￥<span>123456.00</span>
+            ￥<span>{{financeInfo.countEnterBalance || "0.00"}}</span>
           </div>
         </div>
         <div>
           <div class="fiance-tilte">累计提现金额</div>
           <div class="fiance-money-text">
-            ￥<span>123456.00</span>
+            ￥<span>{{financeInfo.countExtractBalance || "0.00"}}</span>
           </div>
         </div>
       </div>
@@ -54,28 +61,42 @@
         <div class="finance-tab-item" :class="type == 'in' ? 'active' : ''" @click="changeType('in')">入账明细</div>
       </div>
       <ul class="cash-out-list" v-show="type == 'out'">
-      	<li>
+      	<li v-for="drawItem in withdrawList" :key="drawItem.id" :data-id="drawItem.id">
           <div class="cash-out-list-flex">
             <div>
-              <p class="color333 bold margin0">￥<span class="font16">112255.00</span></p>
-              <div class="font12 color999 margin-top-5">订单数：1569</div>
+              <p class="color333 bold margin0">￥<span class="font16">{{drawItem.amount}}</span></p>
+              <div class="font12 color999 margin-top-5">{{drawItem.create_time}}</div>
             </div>
-            <span class="color666">待审核</span>
+            <span class="color666">{{drawItem.status_text}}
+              <i class="mui-icon mui-icon-arrowright font14"></i>
+            </span>
           </div>
+        </li>
+        <li class="mui-text-center" v-if="withdrawList.length == 0">
+          没有提现记录
+        </li>
+        <li class="mui-text-center" @click="getMoreDraw" v-else>
+          {{moreDraw ? "点击加载跟多" : "没有更多数据了"}}
         </li>
       </ul>
       <ul class="entry-list" v-show="type == 'in'">
-      	<li>
+      	<li v-for="enterItem in enterList" :key="enterItem.id" :data-id="enterItem.id">
           <div class="entry-list-flex margin-bottom-10">
-            <div class="font14 color666">2018.11.17 ~ 2018.11.30</div>
-            <div class="font12 color999">订单数：1569</div>
+            <div class="font14 color666">{{enterItem.start_end}}</div>
+            <div class="font12 color999">订单数：{{enterItem.order_num}}</div>
           </div>
           <div class="entry-list-flex">
-            <div class="color333 bold">￥<span class="font16">112255.00</span></div>
-            <div class="font12 color999">2018.11.17 16:40
+            <div class="color333 bold">￥<span class="font16">{{enterItem.amount}}</span></div>
+            <div class="font12 color999">{{enterItem.create_time}}
               <i class="mui-icon mui-icon-arrowright font16 bold"></i>
             </div>
           </div>
+        </li>
+        <li class="mui-text-center" v-if="enterList.length == 0">
+          没有入账记录
+        </li>
+        <li class="mui-text-center" @click="getMoreEnter" v-else>
+          {{moreEnter ? "点击加载跟多" : "没有更多数据了"}}
         </li>
       </ul>
     </div>
@@ -86,26 +107,99 @@
 <script type="text/javascript" src="../js/app.js" ></script>
 <script type="text/javascript">
 	mui.init();
-  if($(".entry-list").height() < (document.body.clientHeight - 330)) {
-    $(".entry-list").css({height: (document.body.clientHeight - 330) + "px"})
+  if($(".entry-list").height() < (document.body.clientHeight - 300)) {
+    $(".entry-list").css({height: (document.body.clientHeight - 300) + "px"})
   }
-  if($(".cash-out-list").height() < (document.body.clientHeight - 330)) {
-    $(".cash-out-list").css({height: (document.body.clientHeight - 330) + "px"})
+  if($(".cash-out-list").height() < (document.body.clientHeight - 300)) {
+    $(".cash-out-list").css({height: (document.body.clientHeight - 300) + "px"})
   }
+  window.addEventListener("reload",function(){
+    getFinanceInfo();
+    getDrawList();
+    enterList();
+  })
   var vm = new Vue({
   	el: '#myapp',
   	data: {
   		type: "out",
+      financeInfo: "",
+      withdrawList: [],
+      enterList: [],
+      withdrawPage: 1,
+      enterPage: 1,
+      moreDraw: true,
+      moreEnter: true
   	},
     methods: {
       changeType: function(_type) {
         this.type = _type;
+      },
+      getMoreDraw: function(){
+        if(!vm.moreDraw) return;
+        vm.withdrawPage++;
+        getDrawList();
+      },
+      getMoreEnter: function(){
+        if(!vm.moreEnter) return;
+        vm.enterPage++;
+        enterList();
       }
     }
   })
 	mui.plusReady(function (){
-    
+    getFinanceInfo();
+    getDrawList();
+    enterList();
+    $(".cash-out-list").on("tap","li",function(){
+      if(!$(this).data("id")) return;
+      openWindow("withdraw-detail.html","withdraw-detail",{
+        withdrawId: $(this).data("id")
+      })
+    })
+    $(".entry-list").on("tap","li",function(){
+      if(!$(this).data("id")) return;
+      openWindow("enter-detail.html","enter-detail",{
+        enterId: $(this).data("id")
+      })
+    })
   })
+  $("#goDraw").on("tap",function() {
+    openWindow("cash-out.html","cash-out",{
+      data: vm.financeInfo
+    })
+  })
+  function getFinanceInfo() {
+    doAjax("/company/store/financeInfo",{_token: UserInfo.data._token},function(_data){
+      // console.log(JSON.stringify(_data));
+      vm.financeInfo = _data;
+    })
+  }
+  function getDrawList() {
+    doAjax("/company/withdraw/list",{page_num: 15,page: vm.withdrawPage},function(_data){
+      // console.log(JSON.stringify(_data));
+      if(vm.withdrawPage == 1) {
+        vm.withdrawList = _data;
+      } else {
+        vm.withdrawList = vm.withdrawList.concat(_data);
+      }
+      if(_data.length < 15) {
+        vm.moreDraw = false;
+      }
+    },"get")
+  }
+  function enterList() {
+    doAjax("/company/financeLog/enterList",{page_num: 15,page: vm.enterPage},function(_data){
+      // console.log(JSON.stringify(_data));
+      if(vm.enterPage == 1) {
+        vm.enterList = _data;
+      } else {
+        vm.enterList = vm.enterList.concat(_data);
+      }
+      if(_data.length < 15) {
+        vm.moreEnter = false;
+      }
+    },"get")
+  }
 </script>
 </body>
 

@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<link rel="stylesheet" href="../css/mui.min.css" />
+	<link rel="stylesheet" href="../css/app.css" />
+</head>
+
+<body>
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"><span class="font14">返回</span></a>
+		<h1 class="mui-title">账号信息</h1>
+	</header>
+	<div id="myapp" class="mui-content" v-cloak>
+    <div class="text-list">
+      <div class="text-item mui-clearfix">
+        <label>银行：</label>
+        <div>{{bankInfo.bank}}</div>
+      </div>
+      <div class="text-item mui-clearfix">
+        <label>开户银行：</label>
+        <div>{{bankInfo.bank_name}}</div>
+      </div>
+      <div class="text-item mui-clearfix">
+        <label>银行卡号：</label>
+        <div>{{bankInfo.bank_card}}</div>
+      </div>
+      <div class="text-item mui-clearfix">
+        <label>持卡人：</label>
+        <div>{{bankInfo.account_name}}</div>
+      </div>
+      <div class="text-item mui-clearfix">
+        <label>预留手机：</label>
+        <div>{{bankInfo.reserve_mobile}}</div>
+      </div>
+    </div>
+	</div>
+<script type="text/javascript" src="../js/mui.min.js"></script>
+<script type="text/javascript" src="../js/vue.min.js"></script>
+<script type="text/javascript" src="../js/jquery-3.3.1.min.js" ></script>
+<script type="text/javascript" src="../js/app.js" ></script>
+<script type="text/javascript">
+	mui.init();
+  var vm = new Vue({
+  	el: '#myapp',
+  	data: {
+      bankInfo: ""
+  	}
+  })
+	mui.plusReady(function (){
+    var heard = plus.webview.currentWebview();
+    vm.bankInfo = heard.bankInfo;
+  })
+</script>
+</body>
+
+</html>
