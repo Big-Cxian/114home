@@ -14,25 +14,52 @@
 		<h1 class="mui-title">评论管理</h1>
 	</header>
 	<div id="myapp" class="mui-content" v-cloak>
-    <div class="comment-list mui-clearfix margin-top-10" v-for="(item,index) in listData" :data-index="index" :key="index">
-    	<img class="mui-pull-left" :src="item.img_url || '../images/logo.png'" width="30px" height="30px">
-    	<div class="mui-media-body">
-    		<div class="comment-title">
-          <span class="bold color333 font16">{{item.name}}</span>
-          <span class="color666 font12 mui-text-right">{{item.servicename}}</span>
-    		</div>
-    		<p class='mui-ellipsis-2 color333'>{{item.tel}}</p>
-    		<div class='comment-label'>
-          <div>
-            <i class="mui-icon iconfont icon-star font14" v-for="i in 5" :class="i <= item.star ? 'stars-color' : ''"></i>
+    <div class="bg-white">
+      <div class="finance-tab">
+        <div class="finance-tab-item" :class="type == 'comment' ? 'active' : ''" @click="changeType('comment')">订单评论</div>
+        <div class="finance-tab-item" :class="type == 'complaint' ? 'active' : ''" @click="changeType('complaint')">订单投诉</div>
+      </div>
+    </div>
+    <div v-show="type == 'comment'" class="comment-list-parent">
+      <div class="comment-list mui-clearfix margin-top-10" v-for="(item,index) in commentList" :key="index" :data-id="item.id">
+      	<img class="mui-pull-left" :src="item.user_img || '../images/logo.png'" width="30px" height="30px">
+      	<div class="mui-media-body">
+      		<div class="comment-title">
+            <span class="bold color333 font16">{{item.nickname}}</span>
+            <span class="color666 font12 mui-text-right">{{item.service}}</span>
+      		</div>
+      		<p class='mui-ellipsis-2 color333'>{{item.content}}</p>
+      		<div class='comment-label'>
+            <div>
+              <i class="mui-icon iconfont icon-star font14" v-for="i in 5" :class="i <= item.avg_score ? 'stars-color' : ''"></i>
+            </div>
+            <div class="font12 color999">{{item.create_time}}</div>
           </div>
-          <div class="font12 color999">{{item.time}}</div>
-        </div>
-    	</div>
+      	</div>
+      </div>
+      <div class="mui-text-center mui-padding" v-if="commentList.length == 0">
+      	没有评论消息
+      </div>
     </div>
-    <div class="mui-text-center mui-padding" v-if="listData.length == 0">
-    	没有评论消息
+    <div v-show="type == 'complaint'" class="complaint-list-parent">
+      <div class="comment-list mui-clearfix margin-top-10" v-for="(item,index) in complaintList" :key="index" :data-id="item.id">
+      	<div class="">
+      		<div class="comment-title">
+            <span class="bold color333 font16">{{item.nickname}}</span>
+            <span class="color666 font12 mui-text-right">{{item.reason}}</span>
+      		</div>
+      		<p class='mui-ellipsis-2 color333'>{{item.content}}</p>
+      		<div class='comment-label'>
+            <div>{{item.create_time}}</div>
+            <div class="font12 color999">{{item.order_status_text}}</div>
+          </div>
+      	</div>
+      </div>
+      <div class="mui-text-center mui-padding" v-if="complaintList.length == 0">
+      	没有投诉消息
+      </div>
     </div>
+    
 	</div>
 <script type="text/javascript" src="../js/mui.min.js"></script>
 <script type="text/javascript" src="../js/vue.min.js"></script>
@@ -43,34 +70,33 @@
   var vm = new Vue({
   	el: '#myapp',
   	data: {
-  		type: "1",
-  		listData: [{
-        img_url: "",
-        name: "CrystalCry",
-        servicename: "上门修指甲",
-        tel: "评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论...",
-        star: "4",
-        time: "2018.10.31"
-      },{
-        img_url: "",
-        name: "CrystalCry",
-        servicename: "上门修指甲",
-        tel: "评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论...",
-        star: "5",
-        time: "2018.10.31"
-      },{
-        img_url: "",
-        name: "CrystalCry",
-        servicename: "上门修指甲",
-        tel: "评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论...",
-        star: "2",
-        time: "2018.10.31"
-      }]
-  	}
+      type: "comment",
+  		commentList: [],
+      complaintList: []
+  	},
+    methods: {
+      changeType: function(_type) {
+        this.type = _type;
+      }
+    }
   })
 	mui.plusReady(function (){
-    $(".comment-list").on("tap",function() {
-      openWindow("comment-detail.html","comment-detail")
+    doAjax("/company/orderScore/list",null,function(_data) {
+      vm.commentList = _data;
+    },"get")
+    doAjax("/company/orderComplain/list",null,function(_data) {
+      console.log(JSON.stringify(_data));
+      vm.complaintList = _data;
+    },"get")
+    $(".mui-content-parent").on("tap",".comment-list",function() {
+      openWindow("comment-detail.html","comment-detail",{
+        commentId: $(this).data("id")
+      })
+    })
+    $(".complaint-list-parent").on("tap",".comment-list",function() {
+      openWindow("complaint-detail.html","complaint-detail",{
+        complaintId: $(this).data("id")
+      })
     })
   })
 </script>

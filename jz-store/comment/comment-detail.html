@@ -22,7 +22,7 @@
     <div class="comment-service mui-clearfix">
       <img src="../images/sample.png" alt="" width="80px" height="80px" />
       <div>
-        <h5 class="font14 color333 margin0">家庭360°全方位保洁</h5>
+        <h5 class="font14 color333 margin0">{{displayData.service}}</h5>
         <p class="font12 color999 margin0">30分钟极速到达</p>
       </div>
     </div>
@@ -30,54 +30,31 @@
     	<div class="comment-detail">
         <div>
           <div>
-            <img src="../images/sample.png" width="30px" height="30px" />
-            <span class="bold font16 color333">Crystal</span>
+            <img :src="displayData.user_img || '../images/logo.png'" width="30px" height="30px" />
+            <span class="bold font16 color333">{{displayData.nickname}}</span>
           </div>
-          <span class="font12 color999">2018.10.31</span>
+          <span class="font12 color999">{{displayData.create_time}}</span>
         </div>
-        <p>评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论</p>
+        <p>{{displayData.content}}</p>
       </div>
     	<div class="comment-stars">
         <span>服务质量</span>
         <div>
-          <i class="mui-icon iconfont icon-star font14" v-for="i in 5" :class="i <= 3 ? 'stars-color' : ''"></i>
+          <i class="mui-icon iconfont icon-star font14" v-for="i in 5" :class="i <= displayData.quality_score ? 'stars-color' : ''"></i>
         </div>
       </div>
       <div class="comment-stars">
         <span>服务态度</span>
         <div>
-          <i class="mui-icon iconfont icon-star font14" v-for="i in 5" :class="i <= 5 ? 'stars-color' : ''"></i>
+          <i class="mui-icon iconfont icon-star font14" v-for="i in 5" :class="i <= displayData.attitude_score ? 'stars-color' : ''"></i>
         </div>
       </div>
       <div class="comment-stars">
         <span>响应速度</span>
         <div>
-          <i class="mui-icon iconfont icon-star font14" v-for="i in 5" :class="i <= 4 ? 'stars-color' : ''"></i>
+          <i class="mui-icon iconfont icon-star font14" v-for="i in 5" :class="i <= displayData.speed_score ? 'stars-color' : ''"></i>
         </div>
       </div>
-    </div>
-    <div class="comment-count">
-      全部评论
-      <span>({{listData.length}})</span>
-    </div>
-    <div class="comment-list mui-clearfix" v-for="(item,index) in listData" :data-index="index" :key="index">
-    	<img class="mui-pull-left" :src="item.img_url || '../images/logo.png'" width="30px" height="30px">
-    	<div class="mui-media-body">
-    		<div class="comment-title">
-          <span class="bold color333 font16">{{item.name}}</span>
-          <span class="color666 font12 mui-text-right">{{item.servicename}}</span>
-    		</div>
-    		<p class='mui-ellipsis-2 color333'>{{item.tel}}</p>
-    		<div class='comment-label'>
-          <div>
-            <i class="mui-icon iconfont icon-star font14" v-for="i in 5" :class="i <= item.star ? 'stars-color' : ''"></i>
-          </div>
-          <div class="font12 color999">{{item.time}}</div>
-        </div>
-    	</div>
-    </div>
-    <div class="mui-text-center mui-padding" v-if="listData.length == 0">
-    	没有评论消息
     </div>
 	</div>
 <script type="text/javascript" src="../js/mui.min.js"></script>
@@ -90,32 +67,15 @@
   	el: '#myapp',
   	data: {
   		type: "1",
-  		listData: [{
-        img_url: "",
-        name: "CrystalCry",
-        servicename: "上门修指甲",
-        tel: "评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论...",
-        star: "4",
-        time: "2018.10.31"
-      },{
-        img_url: "",
-        name: "CrystalCry",
-        servicename: "上门修指甲",
-        tel: "评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论...",
-        star: "5",
-        time: "2018.10.31"
-      },{
-        img_url: "",
-        name: "CrystalCry",
-        servicename: "上门修指甲",
-        tel: "评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论...",
-        star: "2",
-        time: "2018.10.31"
-      }]
+      displayData: ""
   	}
   })
 	mui.plusReady(function (){
-    
+    var heard = plus.webview.currentWebview();
+    doAjax("/company/orderScore/info",{id: heard.commentId},function(_data) {
+      // console.log(JSON.stringify(_data));
+      vm.displayData = _data;
+    },"get")
   })
 </script>
 </body>
