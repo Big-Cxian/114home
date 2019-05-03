@@ -1041,3 +1041,26 @@ textarea {
   border: 0;
   border-radius: 15px;
 }
+
+.text-list {
+  padding-left: 15px;
+  background-color: #fff;
+  border-bottom: 1px solid #eee;
+}
+.text-item {
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+.text-item:last-child {
+  border: 0;
+}
+.text-item>label {
+  float: left;
+  width: 80px;
+  color: #999;
+}
+.text-item>div {
+  float: left;
+  width: calc(100% - 95px);
+  color: #333;
+}
