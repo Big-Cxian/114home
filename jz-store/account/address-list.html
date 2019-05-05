@@ -1,0 +1,127 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<link rel="stylesheet" href="../css/mui.min.css" />
+	<link rel="stylesheet" href="../css/mui.picker.min.css" />
+	<link rel="stylesheet" href="../css/mui.poppicker.css" />
+	<link rel="stylesheet" href="../css/app.css" />
+  <style type="text/css">
+    html,body {
+      height: 100%;
+      background-color: #fff;
+    }
+    .address-list {
+      padding: 10px 15px;
+      border-bottom: 1px solid #e3e3e3;
+    }
+    .mui-radio input[type=radio]:before {
+      font-size: 14px;
+    }
+    .mui-radio input[type=radio] {
+      width: 10px;
+      height: 10px;
+    }
+    .radio-box .mui-radio.mui-left label {
+      padding-left: 20px;
+      width: auto;
+    }
+    .radio-box .mui-radio.mui-left input[type=radio] {
+      width: 10px;
+      height: 10px;
+      top: 3px;
+    }
+    .radio-box {
+      padding: 0 !important;
+      line-height: 23px;
+      display: flex;
+    }
+    .address-btn {
+      width: calc(100% - 120px);
+      text-align: right;
+    }
+    .address-btn button {
+      font-size: 12px;
+      padding: 2px 8px;
+      margin-left: 15px;
+    }
+  </style>
+</head>
+
+<body>
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"><span class="font14">返回</span></a>
+		<h1 class="mui-title">店铺地址</h1>
+	</header>
+	<div id="myapp" class="mui-content bg-white" v-cloak>
+    <div class="address-list">
+      <h5 class="color333">
+        <span class="margin-right-15">万达广场</span>
+        啊哈哈哈哈哈
+      </h5>
+      <p class="color999 margin-top-10">
+        <span class="margin-right-15">成都</span>
+        四川省成都市高新区环球中心E1-16089
+      </p>
+      <div class="radio-box mui-clearfix">
+        <div class="mui-input-row mui-radio mui-left height-auto margin-right-15">
+          <label class="color333 font12">常用服务地点</label>
+          <input type="radio" value="2" >
+        </div>
+        <div class="address-btn">
+          <button type="button" class="mui-btn mui-btn-green">编辑</button>
+          <button type="button" class="mui-btn mui-btn-red">删除</button>
+        </div>
+      </div>
+    </div>
+    <div class="address-list">
+      <h5 class="color333">
+        <span class="margin-right-15">万达广场</span>
+        啊哈哈哈哈哈
+      </h5>
+      <p class="color999 margin-top-10">
+        <span class="margin-right-15">成都</span>
+        四川省成都市高新区环球中心E1-16089
+      </p>
+      <div class="radio-box mui-clearfix">
+        <div class="mui-input-row mui-radio mui-left height-auto margin-right-15">
+          <label class="color333 font12">常用服务地点</label>
+          <input type="radio" value="2" >
+        </div>
+        <div class="address-btn">
+          <button type="button" class="mui-btn mui-btn-green">编辑</button>
+          <button type="button" class="mui-btn mui-btn-red">删除</button>
+        </div>
+      </div>
+    </div>
+		<div class="mui-content-padded button-fix">
+			<button type="button" class="mui-btn mui-btn-green mui-btn-block buttom-button" id="add">
+				<i class="mui-icon mui-icon-checkmarkempty"></i>
+					添加地址
+			</button>
+		</div>
+	</div>
+<script type="text/javascript" src="../js/mui.min.js"></script>
+<script type="text/javascript" src="../js/vue.min.js" ></script>
+<script type="text/javascript" src="../js/jquery-3.3.1.min.js" ></script>
+<script type="text/javascript" src="../js/app.js" ></script>
+<script type="text/javascript">
+	mui.init();
+  var vm = new Vue({
+  	el: '#myapp',
+  	data: {
+  		storData: ""
+  	}
+  })
+	mui.plusReady(function (){
+		var heard = plus.webview.currentWebview();
+	})
+  $("#add").on("tap",function() {
+    openWindow("address.html","address")
+  })
+</script>
+</body>
+
+</html>

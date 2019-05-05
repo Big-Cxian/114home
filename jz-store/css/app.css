@@ -212,7 +212,7 @@ textarea {
 /*login.html			start*/
 #login-form {
 	position: fixed;
-	bottom: 0;
+	top: 70px;
 	left: 0;
 	width: 100%;
 	padding: 30px 10%;

@@ -6,6 +6,11 @@
 	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 	<link rel="stylesheet" href="../css/mui.min.css" />
 	<link rel="stylesheet" href="../css/app.css" />
+  <style type="text/css">
+    #forget {
+      float: left;
+    }
+  </style>
 </head>
 
 <body style="background-color: #fff;">
@@ -20,9 +25,10 @@
 			</form>
 			<div class="mui-text-right margin-bottom-50">
 				<a class="purple" id="forget"><small>忘记密码?</small></a>
+				<a class="purple" id="joinIn"><small>商户注册</small></a>
 			</div>
 			<button class="mui-btn mui-btn-royal mui-btn-block" id="login">登录</button>
-			<button class="mui-btn mui-btn-royal-light mui-btn-block" id="register">我要加盟</button>
+			<!-- <button class="mui-btn mui-btn-royal-light mui-btn-block" id="register">我要加盟</button> -->
 			<p class="margin-top-20 mui-text-center font12" style="text-decoration: underline;" id="protocol">用户协议</p>
 		</div>
 	</div>
@@ -52,8 +58,11 @@
 				PassWord: ""
 			}
 		})
-    $("#register").on("tap",function(){
-    	openWindow("register.html","register");
+    // $("#register").on("tap",function(){
+    // 	openWindow("register.html","register");
+    // })
+    $("#joinIn").on("tap",function(){
+    	openWindow("join.html","join");
     })
     $("#login").on("tap",function(){
     	if(vm.Account == "") {
