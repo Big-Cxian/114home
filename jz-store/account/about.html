@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<link rel="stylesheet" href="../css/mui.min.css" />
+	<link rel="stylesheet" href="../css/app.css" />
+</head>
+
+<body>
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"><span class="font14">返回</span></a>
+		<h1 class="mui-title" id="title">关于我们</h1>
+	</header>
+	<div id="myapp" class="mui-content" v-cloak>
+		<div class="mui-card">
+			<form class="mui-input-group no-border-before no-border-after">
+				<ul class="mui-table-view mui-table-view-chevron color666 store">
+					<li class="mui-table-view-cell">
+						<a data-href="about-version.html" data-id="about-version" class="mui-navigate-right">
+							<span>版本协议</span>
+						</a>
+					</li>
+					<li class="mui-table-view-cell">
+						<a data-href="about-merchant.html" data-id="about-merchant" class="mui-navigate-right">
+							<span>商户协议</span>
+						</a>
+					</li>
+					<li class="mui-table-view-cell">
+						<a data-href="about-privacy.html" data-id="about-privacy" class="mui-navigate-right">
+							<span>隐私协议</span>
+						</a>
+					</li>
+				</ul>
+			</form>
+		</div>
+	</div>
+<script type="text/javascript" src="../js/mui.min.js"></script>
+<script type="text/javascript" src="../js/vue.min.js" ></script>
+<script type="text/javascript" src="../js/jquery-3.3.1.min.js" ></script>
+<script type="text/javascript" src="../js/app.js" ></script>
+<script type="text/javascript" src="../js/uploader.js"></script>
+<script type="text/javascript">
+	mui.init();
+	document.addEventListener('get_detail', function(event) {
+		vm.storData = event.detail.storData;
+	});
+  vm = new Vue({
+    el: '#myapp',
+    data: {
+    }
+  })
+  mui(".mui-table-view").on("tap",".mui-navigate-right",function() {
+    var pageName = $(this).data("href");
+    var pageId = $(this).data("id");
+    openWindow(pageName,pageId);
+  })
+</script>
+</body>
+
+</html>

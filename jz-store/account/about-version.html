@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<link rel="stylesheet" href="../css/mui.min.css" />
+	<link rel="stylesheet" href="../css/app.css" />
+  <style type="text/css">
+    .mui-text-center img {
+      width: 80px;
+      height: 80px;
+    }
+  </style>
+</head>
+
+<body>
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"><span class="font14">返回</span></a>
+		<h1 class="mui-title" id="title">版本协议</h1>
+	</header>
+	<div id="myapp" class="mui-content" v-cloak>
+    <div class="bg-white mui-text-center mui-padding">
+      <img :src="versionData.company_logo || '../images/logo.png'">
+      <p class="margin-top-10 margin0 font12">小百到家 {{versionData.version}}</p>
+    </div>
+    <form class="mui-input-group no-border-after">
+      <div class="mui-input-row">
+        <label>微信公众号</label>
+        <input type="text" disabled="disabled" v-model="versionData.wechat_public_number">
+      </div>
+      <div class="mui-input-row">
+        <label>商务合作</label>
+        <input type="text" disabled="disabled" v-model="versionData.company_business_mobile">
+      </div>
+      <div class="mui-input-row">
+        <label>客服电话</label>
+        <input type="text" disabled="disabled" v-model="versionData.company_service_mobile">
+      </div>
+    </form>
+	</div>
+<script type="text/javascript" src="../js/mui.min.js"></script>
+<script type="text/javascript" src="../js/vue.min.js" ></script>
+<script type="text/javascript" src="../js/jquery-3.3.1.min.js" ></script>
+<script type="text/javascript" src="../js/app.js" ></script>
+<script type="text/javascript" src="../js/uploader.js"></script>
+<script type="text/javascript">
+	mui.init();
+	document.addEventListener('get_detail', function(event) {
+		vm.storData = event.detail.storData;
+	});
+  vm = new Vue({
+    el: '#myapp',
+    data: {
+      versionData: ""
+    }
+  })
+  mui.plusReady(function (){
+    doAjax("/company/config/versionProtocol","",function(_data) {
+      console.log(JSON.stringify(_data));
+      vm.versionData = _data;
+    },"get")
+  })
+</script>
+</body>
+
+</html>
