@@ -167,7 +167,8 @@ textarea {
 }
 .mui-input-row label:not(.mui-media) {
 	width: 105px;
-	padding: 11px 0 11px 15px;
+	padding: 10px 0 10px 15px;
+  line-height: 20px;
 }
 .mui-input-row label~p {
 	float: right;

@@ -6,72 +6,73 @@
 	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 	<link rel="stylesheet" href="../css/mui.min.css" />
 	<link rel="stylesheet" href="../css/app.css" />
+  <style type="text/css">
+    .image-list {
+      margin-top: 0;
+      margin-bottom: 5px;
+    }
+    .mui-card>p {
+      padding: 11px 15px 0;
+    }
+    .mui-input-row>span {
+      float: right;
+      margin: 10px 5px 0 0;
+    }
+    .mui-input-row .mui-switch {
+      width: 40px;
+      margin-top: 7px;
+    }
+    .mui-switch.mui-active .mui-switch-handle {
+      transform: translate(15px,0) !important
+    }
+  </style>
 </head>
 
 <body>
 	<header class="mui-bar mui-bar-nav">
 		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"><span class="font14">返回</span></a>
-		<h1 class="mui-title" id="title">店铺名称</h1>
+		<h1 class="mui-title" id="title">企业商铺认证</h1>
 	</header>
 	<div id="myapp" class="mui-content" v-cloak>
-		<div class="mui-card mui-padding">
-			<div class="mui-input-row deMargin">
-				<label>营业状态</label>
-				<div class="mui-switch mui-switch-blue" id="switch" :class="storData.opening_status == '1'?'':'mui-active'">
-					<span class="mui-text-right">营业</span>
-					<span class="mui-text-left">休息</span>
-					<div class="mui-switch-handle"></div>
-				</div>
-			</div>
-		</div>
 		<div class="mui-card">
 			<form class="mui-input-group no-border-before no-border-after">
 				<div class="mui-input-row">
-					<label>店铺LOGO</label>
-					<div>
-						<img :src="storData.img_url || '../images/logo.png'" width="40px" height="40px" />
-					</div>
+					<label>营业执照名称</label>
+					<input type="text" v-model="storData.name" placeholder="无名称请填写经营者姓名" >
 				</div>
-				<div class="mui-input-row">
-					<label>店铺名称</label>
-					<input type="text" v-model="storData.name" disabled="disabled" placeholder="名称" >
+				<div class="mui-input-row height-auto">
+					<label>统一社会信用代码</label>
+					<input type="text" v-model="storData.contact_name" disabled="disabled" placeholder="营业执照注册号" >
 				</div>
-				<ul class="mui-table-view mui-table-view-chevron color666">
-					<li class="mui-table-view-cell">
-						<a data-href="address.html" id="address" class="mui-navigate-right">
-							<span class="margin-right-5 color999">店铺地址</span>
-						</a>
-					</li><li></li>
-				</ul>
-				<div class="mui-input-row">
-					<label>联系人</label>
-					<input type="text" v-model="storData.contact_name" disabled="disabled" placeholder="姓名" >
+				<div class="mui-input-row height-auto">
+					<label>营业执照所在地</label>
+					<input type="text" v-model="storData.phone" disabled="disabled" placeholder="四川--成都" >
 				</div>
-				<div class="mui-input-row">
-					<label>联系电话</label>
-					<input type="text" v-model="storData.phone" disabled="disabled" placeholder="电话" >
-				</div>
-				<ul class="mui-table-view mui-table-view-chevron color666 store">
-					<li class="mui-table-view-cell">
-						<a data-href="service-time.html" id="service-time" class="mui-navigate-right color333">
-							<span>服务时间</span>
-							{{storData.start_time}} - {{storData.end_time}}
-						</a>
-					</li>
-					<li class="mui-table-view-cell">
-						<a data-href="bill-time.html" id="bill-time" class="mui-navigate-right">
-							<span>忙碌时段</span>
-						</a>
-					</li>
-					<li class="mui-table-view-cell">
-						<a data-href="scope.html" id="scope" class="mui-navigate-right">
-							<span>经营范围</span>
-						</a>
-					</li>
-				</ul>
+        <div class="mui-input-row">
+        	<label>执照有效日期</label>
+        	<div class="mui-switch mui-switch-blue" id="switch" :class="storData.opening_status == '1'?'':'mui-active'">
+        		<span class="mui-text-right"></span>
+        		<span class="mui-text-left"></span>
+        		<div class="mui-switch-handle"></div>
+        	</div>
+          <span>固定期限</span>
+        </div>
+        <div class="mui-input-row height-auto">
+        	<label>有效日期至</label>
+        	<input type="text" v-model="storData.phone" disabled="disabled" placeholder="请选择日期" >
+        </div>
+        <div class="mui-input-row height-auto">
+        	<label>法人姓名</label>
+        	<input type="text" v-model="storData.phone" disabled="disabled" placeholder="请输入姓名" >
+        </div>
+        <div class="mui-input-row height-auto">
+        	<label>法人身份证号</label>
+        	<input type="text" v-model="storData.phone" disabled="disabled" placeholder="请输入身份证号" >
+        </div>
 			</form>
 		</div>
 		<div class="mui-card">
+      <p class="margin0 font12">*请上传营业执照相片（请确保证件完整，清晰可见）</p>
 			<ul class="image-list mui-clearfix">
 				<li v-for="(item,index) in imageData" :id="item.id">
 					<img :src="item.path || item.url" />
@@ -84,11 +85,24 @@
 				</li>
 			</ul>
 		</div>
-		<p class="margin10 font12">*上传店铺门面照片</p>
+    <div class="mui-card">
+      <p class="margin0 font12">*请上传正反身份证</p>
+    	<ul class="image-list mui-clearfix">
+    		<li v-for="(item,index) in imageData" :id="item.id">
+    			<img :src="item.path || item.url" />
+    			<span><i class="mui-icon mui-icon-closeempty" @click="delImage(index)" :data-index="index"></i></span>
+    		</li>
+    		<li id="addImage">
+    			<i class="mui-icon mui-icon-plusempty"></i>
+    			<br />
+    			<small>上传图片</small>
+    		</li>
+    	</ul>
+    </div>
 		<div class="mui-content-padded margin-top-20">
 			<button type="button" class="mui-btn mui-btn-royal mui-btn-block buttom-button" id="save">
 				<i class="mui-icon mui-icon-checkmarkempty"></i>
-					提交修改
+					提交审核
 			</button>
 		</div>
 	</div>
@@ -116,12 +130,6 @@
   		}
   	})
 	mui.plusReady(function (){
-	doAjax("/company/store/info",{_token: UserInfo.data._token},function(_data) {
-//		console.log(JSON.stringify(_data));
-		vm.storData = _data;
-		vm.imageData = vm.storData.top_imgs_array;
-		$("#title").html(vm.storData.name)
-	})
 	mui(".mui-table-view").on("tap","a",function () {
 		var pageUrl = $(this).data("href");
 		var pageId = $(this).attr("id");
@@ -133,14 +141,6 @@
 		showActionSheet();
 	})
 	$("#switch").on('tap', function(event) {
-		doAjax("/company/store/updateOpening",{_token: UserInfo.data._token},function(_data,_msg) {
-			mui.toast(_msg);
-			if(vm.storData.opening_status == "1") {
-				vm.storData.opening_status = "2";
-			} else {
-				vm.storData.opening_status = "1";
-			}
-		})
 	});
 	$("#save").on("tap",function(){
 		var top_imgs = [];

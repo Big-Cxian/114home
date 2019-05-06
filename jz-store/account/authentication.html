@@ -15,21 +15,21 @@
 		<h1 class="mui-title"></h1>
 	</header>
 	<div id="myapp" class="mui-content" v-cloak>
-		<div class="mui-card mui-media authentication">
+		<div class="mui-card mui-media authentication" data-href="personal-store.html" data-id="personal-store">
       <img class="mui-media-object mui-pull-left" src="../images/img3.png" width="67px" height="67px">
       <div class="mui-media-body">
       	我是个人商家
       	<p class="mui-ellipsis">您可以上传身份证等照片进行认证</p>
       </div>
 		</div>
-    <div class="mui-card mui-media authentication">
+    <div class="mui-card mui-media authentication" data-href="individual-store.html" data-id="individual-store">
       <img class="mui-media-object mui-pull-left" src="../images/img1.png" width="67px" height="67px">
       <div class="mui-media-body">
       	我是个体商家
       	<p class="mui-ellipsis">上传营业执照有获取更多流量和资源倾斜</p>
       </div>
     </div>
-    <div class="mui-card mui-media authentication">
+    <div class="mui-card mui-media authentication" data-href="enterprise-store.html" data-id="enterprise-store">
       <img class="mui-media-object mui-pull-left" src="../images/img2.png" width="67px" height="67px">
       <div class="mui-media-body">
       	我是企业商家
@@ -46,22 +46,14 @@
   vm = new Vue({
   	el: '#myapp',
   	data: {
-  		requestData: {
-  			name: "",
-  			mobile: "",
-  			code: "",
-  			password: "",
-  			contact_name: "",
-  			identity_id: "",
-  			imgs: []
-  		},
-  		imageData: []
   	},
   	methods: {
   	}
   })
-	mui.plusReady(function() {
-    
+  mui(".mui-content").on("tap",".mui-card",function() {
+    var pageName = $(this).data("href");
+    var pageId = $(this).data("id");
+    openWindow(pageName,pageId);
   })
 </script>
 </body>

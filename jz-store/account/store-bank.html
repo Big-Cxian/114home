@@ -1,0 +1,68 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<link rel="stylesheet" href="../css/mui.min.css" />
+	<link rel="stylesheet" href="../css/app.css" />
+  <style type="text/css">
+    /* .mui-table-view:after */
+  </style>
+</head>
+
+<body>
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"><span class="font14">返回</span></a>
+		<h1 class="mui-title">结算账户</h1>
+	</header>
+	<div id="myapp" class="mui-content" v-cloak>
+    <div class="mui-card">
+      <form class="mui-input-group no-border-before no-border-after">
+        <ul class="mui-table-view mui-table-view-chevron color666 store">
+          <li class="mui-table-view-cell">
+            <a class="mui-navigate-right color333"  data-href="type.html" id="type">
+              <span>选择银行</span>
+              {{displayData.type_name}}
+            </a>
+          </li><li></li>
+        </ul>
+        <div class="mui-input-row">
+          <label>开户银行</label>
+          <input type="text" v-model="displayData.name" placeholder="开户银行" >
+        </div>
+        <div class="mui-input-row">
+          <label>银行卡号</label>
+          <input type="text" v-model="displayData.title"  placeholder="银行卡号" >
+        </div>
+        <div class="mui-input-row">
+          <label>持卡人</label>
+          <input type="number" v-model="displayData.min_number" id="min_number" placeholder="持卡人" >
+        </div>
+        <div class="mui-input-row">
+          <label>预留手机</label>
+          <input type="number" v-model="displayData.visiting_fee" id="visiting_fee" placeholder="预留手机" >
+        </div>
+      </form>
+    </div>
+	</div>
+<script type="text/javascript" src="../js/mui.min.js"></script>
+<script type="text/javascript" src="../js/vue.min.js"></script>
+<script type="text/javascript" src="../js/jquery-3.3.1.min.js" ></script>
+<script type="text/javascript" src="../js/app.js" ></script>
+<script type="text/javascript">
+	mui.init();
+  var vm = new Vue({
+  	el: '#myapp',
+  	data: {
+      displayData: ""
+  	}
+  })
+	mui.plusReady(function (){
+    var heard = plus.webview.currentWebview();
+    vm.bankInfo = heard.bankInfo;
+  })
+</script>
+</body>
+
+</html>
