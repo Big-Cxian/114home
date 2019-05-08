@@ -1,6 +1,7 @@
 var fileData = [];
 var imageType = "image";
 var vm = "";
+var pageId = "";
 
 function showActionSheet() { //方式选择
 	var bts = [{
@@ -26,7 +27,12 @@ function showActionSheet() { //方式选择
 //相册选择
 function galleryImgs() {
 	plus.gallery.pick(function(e) {
-		compressImage([e], 0);
+		// compressImage([e], 0);
+    openWindow("../set/image-cut.html","image-cut",{
+      imgData: [e],
+      imgIndex: 0,
+      pageId: pageId
+    })
 	}, function(e) {}, {
 		filter: "image",
 		multiple: false,
@@ -41,23 +47,35 @@ function getImage() {
 		plus.gallery.save(path, function() {}); //把图片保存到相册
 		plus.io.resolveLocalFileSystemURL(path, function(entry) {
 			var localurl = entry.toLocalURL();
-			compressImage([localurl], 0);
+      // compressImage([localurl], 0);
+      openWindow("../set/image-cut.html","image-cut",{
+        imgData: [localurl],
+        imgIndex: 0,
+        pageId: pageId
+      })
 		});
 	});
 }
 //图片压缩
-function compressImage(_flies, file_index) {
-	var localurl = _flies[file_index];
+function compressImage(_flies, file_index,img_left, img_top, img_width, img_height, img_rotate) {
+	var localurl = './img/' + (new Date()).getTime() + '.jpg';
 	plus.nativeUI.showWaiting("压缩中...");
 	plus.zip.compressImage({
-			src: localurl,
-			dst: "./img/aa.jpg",
+			src: _flies[file_index],
+			dst: localurl,
 			overwrite: true,
-			quality: 20
+			quality: 20,
+      rotate: img_rotate,
+      clip: {
+      	top: img_top,
+      	left: img_left,
+      	width: img_width,
+      	height: img_height
+      }
 		},
 		function(event) {
 			var fileInfo = {
-				"FilePath": "./img/aa.jpg", //压缩后路径
+				"FilePath": localurl, //压缩后路径
 				"FileCategory": "",
 			}
 			fileData.push(fileInfo);
@@ -89,17 +107,20 @@ function uploadeImage(_fileList) {
 	}, function(result) { //上传完成
 		plus.nativeUI.closeWaiting();
 		var resultData = JSON.parse(result.responseText);
-//		  		console.log("上传完成" + JSON.stringify(resultData));
+		  		console.log("上传完成" + JSON.stringify(resultData));
 		if(result.state == "4" && result.responseText != "") {
 			clearTimeout();
 			if(resultData.status == "1") {
 				mui.toast("上传成功");
 				resultData.data.path = _fileList[0].FilePath;
-				if(imageType == "image") {
-					vm.imageData.push(resultData.data);
-				} else if(imageType == "banner") {
-					vm.bannerData.push(resultData.data);
-				}
+        mui.fire(plus.webview.getWebviewById(pageId), 'resetImg', {
+        });
+        mui.back()
+				// if(imageType == "image") {
+				// 	vm.imageData.push(resultData.data);
+				// } else if(imageType == "banner") {
+				// 	vm.bannerData.push(resultData.data);
+				// }
 				return;
 			} else {
 				mui.toast("图片上传失败" + resultData.message);

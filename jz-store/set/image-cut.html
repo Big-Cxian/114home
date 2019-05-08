@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta charset="utf-8">
+  <title></title>
+  <link rel="stylesheet" href="../css/cropper.css" />
+  <link rel="stylesheet" href="../css/mui.min.css" />
+  <style>
+    html {
+      background: #000000;
+    }
+    
+    .outer-box {
+      display: flex;
+      display: -webkit-flex;
+      background-color: #000000;
+      flex-direction: row;
+      flex-flow: row wrap;
+      -webkit-flex-flow: row wrap;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      width: 100%;
+    }
+    
+    #redo {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      font-size: 30px;
+      color: #FFFFFF;
+      background-image: url(../../images/setting/right.png);
+      background-size: 100%;
+      width: 26px;
+      height: 26px;
+    }
+    
+    #undo {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      font-size: 30px;
+      color: #FFFFFF;
+      background-image: url(../../images/setting/left.png);
+      background-size: 100%;
+      width: 26px;
+      height: 26px;
+    }
+    
+    .container {
+      border: none;
+      text-align: center;
+      width: 100%;
+    }
+    
+    #mui-back {
+      color: white;
+      margin-top: 8px;
+      font-size: 36px;
+      font-weight: 700;
+    }
+  </style>
+</head>
+
+<body>
+  <header class="mui-bar mui-bar-transparent">
+    <a id="mui-back" class="mui-action-back mui-icon mui-icon-closeempty mui-pull-left"></a>
+    <a id="save" class="mui-icon mui-icon-checkmarkempty mui-pull-right" style="font-size: 3rem;color: #FFFFFF;"></a>
+  </header>
+  <div style=" " class="outer-box mui-fullscreen">
+    <div class="container">
+      <img style="width:100%;" id="image" src="">
+    </div>
+  </div>
+  
+  <a id="redo" class=" mui-pull-left"></a>
+  <a id="undo" class=" mui-pull-right"></a>
+  <script type="text/javascript" src="../js/mui.min.js"></script>
+  <!-- <script type="text/javascript" src="../js/jquery-3.3.1.min.js"></script> -->
+  <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+  <script type="text/javascript" src="../js/cropper.min.js"></script>
+  <script type="text/javascript" src="../js/app.js"></script>
+  <script type="text/javascript" src="../js/uploader.js"></script>
+  <script type="text/javascript">
+    mui.plusReady(function() {
+      var heard = plus.webview.currentWebview();
+      var src = heard.imgData[heard.imgIndex];
+      document.getElementById("redo").addEventListener("tap", function() {
+        $('#image').cropper('rotate', 90);
+      });
+      //左旋转按钮监听
+      document.getElementById("undo").addEventListener("tap", function() {
+        $('#image').cropper('rotate', -90);
+      });
+      $('#image').cropper({
+        aspectRatio: 856 / 540,
+        //			    dragMode:'crop',
+        strict: false,
+        rotatable: true, //是否允许旋转
+        background: false,
+        guides: false,
+        zoomable: true,
+        touchDragZoom: false,
+        minCropBoxWidth: 100,
+        minCropBoxHeight: 100,
+        minCanvasWidth: 0,
+        minCanvasHeight: 0,
+        minContainerWidth: 200,
+        minContainerHeight: 200,
+        cropBoxResizable: true, //是否允许 调整 剪裁框 的大小
+      });
+      $('#image').cropper('replace', src);
+      mui('#save')[0].addEventListener('tap', function() {
+        var cropBoxData = $('#image').cropper('getData');
+        if(cropBoxData.x < 0) {
+          cropBoxData.x = 0;
+        }
+        if(cropBoxData.y < 0) {
+          cropBoxData.y = 0;
+        }
+        var img_rotate = 0;
+        if(!cropBoxData.rotate) {
+          cropBoxData.rotate = 0;
+        }
+        if(cropBoxData.rotate >= 0) {
+          rotate = cropBoxData.rotate;
+        } else {
+          switch(cropBoxData.rotate) {
+            case -90:
+              img_rotate = 270;
+              break;
+            case -180:
+              img_rotate = 180;
+              break;
+            case -270:
+              img_rotate = 90;
+              break;
+            default:
+              img_rotate = 0;
+          }
+        }
+
+        var img_left = cropBoxData.x;
+        var img_top = cropBoxData.y;
+        var img_width = cropBoxData.width;
+        var img_height = cropBoxData.height;
+        var path = mui('#image')[0].src;
+        // console.log(img_rotate);
+        compressImage([path],0, img_left, img_top, img_width, img_height, img_rotate)
+      })
+    });
+  </script>
+</body>
+
+</html>

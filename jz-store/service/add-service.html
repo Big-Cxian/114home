@@ -13,6 +13,23 @@
 			padding: 10px 0;
 			text-align: left;
 		}
+    .service-category-list {
+      display: flex;
+      flex-flow: wrap;
+      padding: 10px 0 0 0;
+    }
+    .btn label {
+      padding: 0 12px;
+    	margin: 0 5px 10px 0;
+    	display: block;
+    	height: 30px;
+    	border-radius: 15px;
+    	text-align: center;
+    	line-height: 28px;
+    	font-size: 12px;
+    	color: #333;
+      border: 1px solid #E6E6E6;
+    }
 	</style>
 </head>
 
@@ -148,9 +165,33 @@
 							<span>服务内容</span>
 						</a>
 					</li>
+          <li class="mui-table-view-cell">
+          	<a class="mui-navigate-right" data-href="../account/address-list.html" id="address-list">
+          		<span>服务范围</span>
+          	</a>
+          </li>
 				</ul>
 			</form>
 		</div>
+    <div class="mui-card">
+    	<div class="service-category-list">
+    	  <div class="btn">
+    	    <label >
+    	      迟到必赔
+    	    </label>
+    	  </div>
+        <div class="btn">
+          <label >
+            服务保证
+          </label>
+        </div>
+        <div class="btn">
+          <label >
+            价格透明
+          </label>
+        </div>
+    	</div>
+    </div>
 		<div class="mui-content-padded margin-top-20">
 			<button type="button" class="mui-btn mui-btn-warning mui-btn-block buttom-button" id="save" v-show="isNew && !displayData.audit_status && displayData.audit_status != 0">
 				<i class="mui-icon mui-icon-checkmarkempty"></i>
