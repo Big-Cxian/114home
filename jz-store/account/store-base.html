@@ -30,34 +30,26 @@
 			<form class="mui-input-group no-border-before no-border-after">
 				<div class="mui-input-row">
 					<label>店铺名称</label>
-					<input type="text" v-model="storData.name" disabled="disabled" placeholder="名称" >
+					<input type="text" v-model="storeData.name" disabled="disabled" placeholder="名称" >
 				</div>
         <div class="mui-input-row height-auto">
         	<label>店铺介绍</label>
-          <textarea rows="4" placeholder="店铺介绍"></textarea>
+          <textarea rows="4" readonly="readonly" v-model="storeData.description" placeholder="店铺介绍"></textarea>
         </div>
 				<div class="mui-input-row">
 					<label>联系人</label>
-					<input type="text" v-model="storData.contact_name" disabled="disabled" placeholder="姓名" >
+					<input type="text" v-model="storeData.contact_name" disabled="disabled" placeholder="姓名" >
 				</div>
 				<div class="mui-input-row">
 					<label>联系电话</label>
-					<input type="text" v-model="storData.phone" disabled="disabled" placeholder="电话" >
+					<input type="text" v-model="storeData.phone" disabled="disabled" placeholder="电话" >
 				</div>
-				<ul class="mui-table-view mui-table-view-chevron color666 store">
-					<li class="mui-table-view-cell">
-						<a data-href="service-time.html" id="service-time" class="mui-navigate-right color333">
-							<span>营业  时间</span>
-							{{storData.start_time}} - {{storData.end_time}}
-						</a>
-					</li>
-				</ul>
 			</form>
 		</div>
 		<div class="mui-card">
 			<ul class="image-list mui-clearfix">
 				<li v-for="(item,index) in imageData" :id="item.id">
-					<img :src="item.path || item.url" />
+					<img :src="item.url" />
 					<span><i class="mui-icon mui-icon-closeempty" @click="delImage(index)" :data-index="index"></i></span>
 				</li>
 				<li id="addImage">
@@ -82,13 +74,15 @@
 <script type="text/javascript" src="../js/uploader.js"></script>
 <script type="text/javascript">
 	mui.init();
-	document.addEventListener('get_detail', function(event) {
-		vm.storData = event.detail.storData;
+	document.addEventListener('get_img', function(event) {
+    // console.log(JSON.stringify(event.detail));
+		vm.storeData = event.detail.storeData;
+		vm.imageData = event.detail.imageData;
 	});
   vm = new Vue({
     el: '#myapp',
     data: {
-      storData: "",
+      storeData: "",
       imageData: []
     },
     methods: {
@@ -98,44 +92,44 @@
       }
     }
   })
-	mui.plusReady(function (){
-	
-	mui(".mui-table-view").on("tap","a",function () {
-		var pageUrl = $(this).data("href");
-		var pageId = $(this).attr("id");
-		if(pageId) {
-			openWindow(pageUrl,pageId,{data: vm.storData},false)
-		}
-	})
-	$("#addImage").on("tap",function(){
-		showActionSheet();
-	})
-	$("#switch").on('tap', function(event) {
-		doAjax("/company/store/updateOpening",{_token: UserInfo.data._token},function(_data,_msg) {
-			mui.toast(_msg);
-			if(vm.storData.opening_status == "1") {
-				vm.storData.opening_status = "2";
-			} else {
-				vm.storData.opening_status = "1";
-			}
-		})
-	});
-	$("#save").on("tap",function(){
-		var top_imgs = [];
-		for(var i=0;i<vm.imageData.length;i++) {
-			if(vm.imageData[i].id) {
-				top_imgs.push(vm.imageData[i].id);
-			}
-		}
-		doAjax("/company/store/updateTopImgs",{_token: UserInfo.data._token,top_imgs: top_imgs.join()},function(_data,_msg) {
-			mui.fire(plus.webview.getWebviewById("tab-main.html"), 'get_detail', {
-				bannerData: vm.imageData
-			});
-			mui.toast(_msg);
-			mui.back();
-		})
+  pageId = "store-base";
+  mui.plusReady(function (){
+    var heard = plus.webview.currentWebview();
+    vm.storeData = heard.data;
+    vm.imageData = vm.storeData.top_imgs_array;
+    $("#addImage").on("tap",function(){
+      showActionSheet();
+    })
+    $("#switch").on('tap', function(event) {
+      doAjax("/company/store/updateOpening",{_token: UserInfo.data._token},function(_data,_msg) {
+        mui.toast(_msg);
+        if(vm.storeData.opening_status == "1") {
+          vm.storeData.opening_status = "2";
+        } else {
+          vm.storeData.opening_status = "1";
+        }
+      })
+    });
+    $("#save").on("tap",function(){
+      var top_imgs = [];
+      for(var i=0;i<vm.imageData.length;i++) {
+        if(vm.imageData[i].id) {
+          top_imgs.push(vm.imageData[i].id);
+        }
+      }
+      doAjax("/company/store/updateTopImgs",{_token: UserInfo.data._token,top_imgs: top_imgs.join()},function(_data,_msg) {
+        mui.fire(plus.webview.getWebviewById("tab-main.html"), 'get_detail', {
+          bannerData: vm.imageData
+        });
+        vm.storeData.top_imgs_array = vm.imageData;
+        mui.fire(plus.webview.getWebviewById("store"), 'get_detail', {
+          storeData: vm.storeData
+        });
+        mui.toast(_msg);
+        mui.back();
+      })
+    })
   })
-})
 </script>
 </body>
 

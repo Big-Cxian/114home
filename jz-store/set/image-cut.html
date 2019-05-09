@@ -33,7 +33,7 @@
       left: 20px;
       font-size: 30px;
       color: #FFFFFF;
-      background-image: url(../../images/setting/right.png);
+      background-image: url(../images/right.png);
       background-size: 100%;
       width: 26px;
       height: 26px;
@@ -45,7 +45,7 @@
       right: 20px;
       font-size: 30px;
       color: #FFFFFF;
-      background-image: url(../../images/setting/left.png);
+      background-image: url(../images/left.png);
       background-size: 100%;
       width: 26px;
       height: 26px;
@@ -80,15 +80,26 @@
   <a id="redo" class=" mui-pull-left"></a>
   <a id="undo" class=" mui-pull-right"></a>
   <script type="text/javascript" src="../js/mui.min.js"></script>
-  <!-- <script type="text/javascript" src="../js/jquery-3.3.1.min.js"></script> -->
-  <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-3.3.1.min.js"></script>
+  <script type="text/javascript" src="../js/vue.min.js" ></script>
   <script type="text/javascript" src="../js/cropper.min.js"></script>
   <script type="text/javascript" src="../js/app.js"></script>
   <script type="text/javascript" src="../js/uploader.js"></script>
   <script type="text/javascript">
+    vm = new Vue({
+      el: '#myapp',
+      data: {
+        storeData: "",
+        imageData: []
+      }
+    })
     mui.plusReady(function() {
       var heard = plus.webview.currentWebview();
-      var src = heard.imgData[heard.imgIndex];
+      // console.log(JSON.stringify(heard));
+      var src = heard.imgs[heard.imgIndex];
+      vm.storeData = heard.storeData;
+      vm.imageData = heard.imageData;
+      pageId = heard.pageId;
       document.getElementById("redo").addEventListener("tap", function() {
         $('#image').cropper('rotate', 90);
       });
@@ -97,7 +108,7 @@
         $('#image').cropper('rotate', -90);
       });
       $('#image').cropper({
-        aspectRatio: 856 / 540,
+        aspectRatio: 750 / 300,
         //			    dragMode:'crop',
         strict: false,
         rotatable: true, //是否允许旋转

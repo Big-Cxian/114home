@@ -29,7 +29,9 @@ function galleryImgs() {
 	plus.gallery.pick(function(e) {
 		// compressImage([e], 0);
     openWindow("../set/image-cut.html","image-cut",{
-      imgData: [e],
+      storeData: vm.storeData,
+      imageData: vm.imageData,
+      imgs: [e],
       imgIndex: 0,
       pageId: pageId
     })
@@ -49,7 +51,9 @@ function getImage() {
 			var localurl = entry.toLocalURL();
       // compressImage([localurl], 0);
       openWindow("../set/image-cut.html","image-cut",{
-        imgData: [localurl],
+        storeData: vm.storeData,
+        imageData: vm.imageData,
+        imgs: [localurl],
         imgIndex: 0,
         pageId: pageId
       })
@@ -113,15 +117,13 @@ function uploadeImage(_fileList) {
 			if(resultData.status == "1") {
 				mui.toast("上传成功");
 				resultData.data.path = _fileList[0].FilePath;
-        mui.fire(plus.webview.getWebviewById(pageId), 'resetImg', {
+        vm.imageData.push(resultData.data);
+        console.log(pageId);
+        mui.fire(plus.webview.getWebviewById(pageId), 'get_img', {
+          storeData: vm.storeData,
+          imageData: vm.imageData
         });
-        mui.back()
-				// if(imageType == "image") {
-				// 	vm.imageData.push(resultData.data);
-				// } else if(imageType == "banner") {
-				// 	vm.bannerData.push(resultData.data);
-				// }
-				return;
+        mui.back();
 			} else {
 				mui.toast("图片上传失败" + resultData.message);
 			}
