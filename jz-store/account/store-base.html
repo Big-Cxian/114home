@@ -100,16 +100,6 @@
     $("#addImage").on("tap",function(){
       showActionSheet();
     })
-    $("#switch").on('tap', function(event) {
-      doAjax("/company/store/updateOpening",{_token: UserInfo.data._token},function(_data,_msg) {
-        mui.toast(_msg);
-        if(vm.storeData.opening_status == "1") {
-          vm.storeData.opening_status = "2";
-        } else {
-          vm.storeData.opening_status = "1";
-        }
-      })
-    });
     $("#save").on("tap",function(){
       var top_imgs = [];
       for(var i=0;i<vm.imageData.length;i++) {
