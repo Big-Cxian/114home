@@ -8,6 +8,22 @@
 	<link rel="stylesheet" href="../css/mui.picker.min.css" />
 	<link rel="stylesheet" href="../css/mui.poppicker.css" />
 	<link rel="stylesheet" href="../css/app.css" />
+  <style type="text/css">
+    textarea {
+      margin: 7px 15px 7px 0 !important;
+      padding: 0;
+      font-size: 14px;
+      color: #333;
+      background-color: #FBFBFB !important;
+    }
+    .mui-input-row label~textarea {
+      width: calc(100% - 120px);
+    }
+    .mui-input-row select {
+      font-size: 14px;
+      color: #333;
+    }
+  </style>
 </head>
 
 <body>
@@ -20,13 +36,13 @@
 			<form class="mui-input-group no-border-before no-border-after">
 				<div class="mui-input-row height-auto">
 					<label>所在地区</label>
-					<div id="region" class="mui-text-left color333" type="button" :value="storData.area_text">
-						{{storData.area_text}}
-					</div>
+          <select name="public-choice" v-model="citySelected">                                        
+              <option :value="coupon.city_id" v-for="coupon in cityList" >{{coupon.area_text}}</option>                                    
+          </select>
 				</div>
 				<div class="mui-input-row height-auto">
 					<label>详细地址</label>
-					<textarea class="font14 color333" type="text" v-model="storData.address" placeholder="店铺详细地址" ></textarea>
+					<textarea rows="4" class="font14 color333" type="text" v-model="storeData.address" placeholder="店铺详细地址" ></textarea>
 				</div>
 			</form>
 		</div>
@@ -41,56 +57,42 @@
 <script type="text/javascript" src="../js/mui.min.js"></script>
 <script type="text/javascript" src="../js/vue.min.js" ></script>
 <script type="text/javascript" src="../js/jquery-3.3.1.min.js" ></script>
-<script type="text/javascript" src="../js/mui.picker.min.js" ></script>
-<script type="text/javascript" src="../js/mui.poppicker.js" ></script>
 <script type="text/javascript" src="../js/app.js" ></script>
 <script type="text/javascript">
 	mui.init();
+  var vm = new Vue({
+  	el: '#myapp',
+  	data: {
+  		storeData: "",
+      cityList:[],
+      citySelected: ""
+  	}
+  })
 	mui.plusReady(function (){
-		var _getParam = function(obj, param) {
-			return obj[param] || '';
-		};
 		var heard = plus.webview.currentWebview();
-		var vm = new Vue({
-			el: '#myapp',
-			data: {
-				storData: heard.data
-			}
-		})
-		var list = "",
-		cityPicker3="";
-		doAjax("/city/getCityTree","",function(_data) {
-//			list = areaData(JSON.parse(_data.list)[0].children);
-			list = areaData(_data.list);
-			cityPicker3 = new mui.PopPicker({
-				layer: 4
-			});
-			cityPicker3.setData(list);
-		})
-		document.getElementById('region').addEventListener('tap',function () {
-			cityPicker3.show(function(items) {
-				$("#region").val(_getParam(items[0], 'text') + " " + _getParam(items[1], 'text') + " " + _getParam(items[2], 'text') + " " + _getParam(items[3], 'text'));
-				if(items[3].value) {
-					vm.storData.street_id = _getParam(items[3], 'value');
-				} else {
-					vm.storData.street_id = _getParam(items[2], 'value');
-				}
-				vm.storData.area_text = _getParam(items[0], 'text') + " " + _getParam(items[1], 'text') + " " + _getParam(items[2], 'text') + " " + _getParam(items[3], 'text');
-			});
-		}, false);
+    vm.storeData = heard.data;
+    vm.citySelected = heard.data.city_id;
+    // console.log(JSON.stringify(vm.storeData));
+		doAjax("company/city/list","",function(_data) {
+      // console.log(JSON.stringify(_data));
+      vm.cityList = _data.list;
+      vm.citySelected = vm.storeData.city_id || _data.list[0].city_id;
+		},"get")
 		$("#save").on("tap",function (){
-			if(vm.storData.address == "") {
+			if(vm.storeData.address == "") {
 				mui.toast("请输入详细地址");
 				return;
 			}
 			doAjax("/company/store/updateAddr",{
 				_token: UserInfo.data._token,
-				street_id: vm.storData.street_id,
-				address: vm.storData.address
+				city_id: vm.citySelected,
+				address: vm.storeData.address
 			},function(_data,_msg) {
-				mui.fire(plus.webview.getWebviewById("store"), 'get_detail', {
-					storData: vm.storData,
-				});
+        // console.log(JSON.stringify(_data));
+        vm.storeData.city_id = vm.citySelected;
+        mui.fire(plus.webview.getWebviewById("store"), 'get_detail', {
+          storeData: vm.storeData
+        });
 				mui.toast(_msg);
 				mui.back();
 			})
