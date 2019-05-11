@@ -971,17 +971,13 @@ textarea {
 }
 .promotion-list .promotion-tag {
   width: 60px;
-  height: 60px;
   flex-grow: 0;
-  background: url(../images/approval.png) repeat center center;
-  background-size: cover;
-  border-radius: 50%;
+  font-size: 16px;
+  font-weight: bold;
+  color: #31A56B;
 }
+.promotion-list.over>span,
 .promotion-list.over .promotion-tag {
-  background: url(../images/logo.png) repeat center center;
-  background-size: cover;
-}
-.promotion-list.over>span {
   color: #ccc;
 }
 .promotion-title h5 {
@@ -1032,9 +1028,10 @@ textarea {
   flex-grow: 0;
 }
 .promotion-service-btn button {
-  padding: 0;
+  padding: 0 !important;
   width: 50px;
   height: 30px;
+  line-height: 30px;
   color: #fff;
   font-size: 13px;
   text-align: center;

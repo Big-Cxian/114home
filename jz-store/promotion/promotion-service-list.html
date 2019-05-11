@@ -17,6 +17,10 @@
     .mui-checkbox .promotion-service-btn input {
       top: calc(50% - 14px);
     }
+    .mui-input-row label:not(.mui-media) {
+      width: calc(100% - 170px);
+      padding: 0;
+    }
   </style>
 </head>
 
@@ -26,34 +30,20 @@
 		<h1 class="mui-title">活动促销</h1>
 	</header>
 	<div id="myapp" class="mui-content padding-left-right">
-    <label class="promotion-service-list mui-input-row mui-checkbox bg-white">
-      <img src="../images/sample.png" width="80px" height="80px" >
-      <div class="promotion-service-title">
-        <h5 class="mui-ellipsis mui-ellipsis-1 color333">活动名称活动名称活动名称活动名称</h5>
+    <div class="promotion-service-list mui-input-row mui-checkbox bg-white" v-for="item in listData">
+      <img :src="item.img_url || '../images/sample.png'" width="80px" height="80px" >
+      <label class="promotion-service-title">
+        <h5 class="mui-ellipsis mui-ellipsis-1 color333">{{item.name}}</h5>
         <div>
-          <div class="red bold margin-right-15">￥<span class="font16">999</span></div>
-          <div class="font12">销量:754</div>
+          <div class="red bold margin-right-15">￥<span class="font16">{{item.service_price}}</span></div>
+          <div class="font12">销量:{{item.count_sales}}</div>
         </div>
-        <p class="margin0 font12 mui-ellipsis mui-ellipsis-1">一切都像新的一样！</p>
-      </div>
+        <p class="margin0 font12 mui-ellipsis mui-ellipsis-1">{{item.title}}</p>
+      </label>
       <div class="promotion-service-btn">
-        <input type="checkbox" name="service">
+        <input type="checkbox" v-model="selectIds" name="service" :value="item.id">
       </div>
-    </label>
-    <label class="promotion-service-list mui-input-row mui-checkbox bg-white">
-      <img src="../images/sample.png" width="80px" height="80px" >
-      <div class="promotion-service-title">
-        <h5 class="mui-ellipsis mui-ellipsis-1 color333">活动名称活动名称活动名称活动名称</h5>
-        <div>
-          <div class="red bold margin-right-15">￥<span class="font16">999</span></div>
-          <div class="font12">销量:754</div>
-        </div>
-        <p class="margin0 font12 mui-ellipsis mui-ellipsis-1">一切都像新的一样！</p>
-      </div>
-      <div class="promotion-service-btn">
-        <input type="checkbox" name="service">
-      </div>
-    </label>
+    </div>
 	</div>
   <div class="mui-content-padded button-fix">
   	<button type="button" class="mui-btn mui-btn-warning mui-btn-block buttom-button" id="save">
@@ -70,11 +60,49 @@
   var vm = new Vue({
   	el: '#myapp',
   	data: {
-  		listData: []
+  		listData: [],
+      selectIds: [],
+      promotionData: ""
   	}
   })
 	mui.plusReady(function (){
-    
+    var heard = plus.webview.currentWebview();
+    vm.promotionData = heard.promotionData;
+    // console.log(JSON.stringify(vm.promotionData));
+    doAjax("/company/service/list",{
+    	_token: UserInfo.data._token,
+    	page_num: 50,
+    	page: 1,
+    	status: 1
+    },function (_data) {
+      // console.log(JSON.stringify(_data));
+      vm.listData = _data.list;
+      for(var i in vm.promotionData.service_store_list) {
+        vm.selectIds.push(vm.promotionData.service_store_list[i].id);
+      }
+      for(var i in vm.selectIds) {
+        for(var j in vm.listData) {
+          if(vm.selectIds[i] == vm.listData[j].id) {
+            vm.listData.splice(j,1)
+          }
+        }
+      }
+      vm.selectIds = [];
+    },"get");
+    $("#save").on("tap",function(){
+      if(vm.selectIds.length == 0) {
+        mui.toast("请选择要添加的活动");
+        return;
+      }
+      doAjax("/company/promotion/binding",{id: 5,service_store_id: vm.selectIds},function(_data,_msg) {
+        // console.log(JSON.stringify(_data));
+        mui.toast(_msg);
+        mui.fire(plus.webview.getWebviewById("promotion-detail"), 'reload',{
+          id: vm.promotionData.id
+        });
+        mui.back();
+      })
+    })
 	})
 </script>
 </body>

@@ -16,6 +16,16 @@
     .mui-card {
       border-radius: 4px;
     }
+    textarea {
+      margin: 7px 15px 7px 0 !important;
+      padding: 0;
+      font-size: 14px;
+      color: #333;
+      background-color: #FBFBFB !important;
+    }
+    .mui-input-row label~textarea {
+      width: calc(100% - 120px);
+    }
   </style>
 </head>
 
@@ -24,8 +34,8 @@
 		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"><span class="font14">返回</span></a>
 		<h1 class="mui-title">活动促销</h1>
 	</header>
-	<div id="myapp" class="mui-content padding-left-right">
-		<div class="mui-card margin0 margin-bottom-10 margin-top-10">
+	<div id="myapp" class="mui-content padding-left-right" v-cloak>
+		<!-- <div class="mui-card margin0 margin-bottom-10 margin-top-10">
 			<ul class="image-list mui-clearfix margin0">
 				<li>
 					<img src="../images/sample.png" />
@@ -37,62 +47,54 @@
         	<img src="../images/sample.png" />
         </li>
 			</ul>
-		</div>
+		</div> -->
+    <div class="mui-card margin0 margin-bottom-10 margin-top-10">
+      <img :src="promotionData.img_url2 || '../images/banner.png'" width="100%" />
+    </div>
     <div class="mui-card margin0">
     	<form class="mui-input-group no-border-before no-border-after">
     		<div class="mui-input-row">
     			<label>活动主题</label>
-    			<input type="text" placeholder="活动主题" >
+    			<input type="text" disabled="disabled" v-model="promotionData.name" placeholder="活动主题" >
     		</div>
     		<div class="mui-input-row">
     			<label>关键字段</label>
-    			<input type="text" placeholder="共享，优惠，促销" >
+    			<input type="text" disabled="disabled" v-model="promotionData.keyword" placeholder="共享，优惠，促销" >
     		</div>
     		<div class="mui-input-row">
     			<label>活动折扣</label>
-    			<input type="number" placeholder="几折" >
+    			<input type="text" disabled="disabled" v-model="promotionData.discount_text" placeholder="几折" >
     		</div>
     		<div class="mui-input-row">
     			<label>活动时间</label>
-    			<input type="number" placeholder="2018.11.01 - 2018.11.30" >
+    			<input type="text" disabled="disabled" v-model="promotionData.start_time + ' - ' + promotionData.end_time" placeholder="2018.11.01 - 2018.11.30" >
     		</div>
-    		<div class="mui-input-row">
+        <div class="mui-input-row height-auto">
+        	<label>活动描述</label>
+          <textarea rows="4" readonly="readonly" v-model="promotionData.detail" placeholder="店铺介绍"></textarea>
+        </div>
+    		<!-- <div class="mui-input-row">
     			<label>活动描述</label>
           <div class="promotion-content">
           	<span>活动描述</span>
           	<i class="mui-icon mui-icon-arrowdown mui-pull-right font20"></i>
           </div>
-    		</div>
+    		</div> -->
     	</form>
     </div>
-    <div class="promotion-service-list">
-      <img src="../images/sample.png" width="80px" height="80px" >
+    <div class="promotion-service-list" v-for="(item,index) in promotionData.service_store_list" :key="item.id">
+      <img :src="item.img_url || '../images/sample.png'" width="80px" height="80px">
       <div class="promotion-service-title">
-        <h5 class="mui-ellipsis mui-ellipsis-1 color333">活动名称活动名称活动名称活动名称</h5>
-        <p class="margin0 font12 mui-ellipsis mui-ellipsis-1 line-height-20">一切都像新的一样！</p>
+        <h5 class="mui-ellipsis mui-ellipsis-1 color333" style="line-height: 20px;">{{item.name}}</h5>
+        <p class="margin0 font12 mui-ellipsis mui-ellipsis-1 line-height-20">{{item.title}}</p>
         <div class="font12 margin-top-5">
-          <div class="red bold">￥<span class="font16">999</span></div>
-          <div class="font12">原价<span class="line-through">￥99.99</span></div>
-          <div class="font12">销量:754</div>
+          <div class="red bold">￥<span class="font16">{{item.service_price * promotionData.discount}}</span></div>
+          <div class="font12">原价<span class="line-through">￥{{item.service_price}}</span></div>
+          <div class="font12">销量:{{item.sales}}</div>
         </div>
       </div>
       <div class="promotion-service-btn">
-        <button type="button">取消</button>
-      </div>
-    </div>
-    <div class="promotion-service-list">
-      <img src="../images/sample.png" width="80px" height="80px" >
-      <div class="promotion-service-title">
-        <h5 class="mui-ellipsis mui-ellipsis-1 color333">活动名称活动名称活动名称活动名称</h5>
-        <p class="margin0 font12 mui-ellipsis mui-ellipsis-1 line-height-20">一切都像新的一样！</p>
-        <div class="font12 margin-top-5">
-          <div class="red bold">￥<span class="font16">999</span></div>
-          <div class="font12">原价<span class="line-through">￥99.99</span></div>
-          <div class="font12">销量:754</div>
-        </div>
-      </div>
-      <div class="promotion-service-btn">
-        <button type="button">取消</button>
+        <button type="button" @click="delService(item.id,index)">取消</button>
       </div>
     </div>
 	</div>
@@ -111,15 +113,37 @@
   var vm = new Vue({
   	el: '#myapp',
   	data: {
-  		listData: []
-  	}
+  		promotionData: ""
+  	},
+    methods: {
+      delService: function(_id,_index) {
+        doAjax("/company/promotion/untied",{service_store_id: _id},function(_data,_msg) {
+          // console.log(JSON.stringify(_data));
+          mui.toast(_msg);
+          (vm.promotionData.service_store_list).splice(_index,1)
+        })
+      }
+    }
   })
+  document.addEventListener('reload', function(event) {
+    getDetail(event.detail.id)
+  });
   $("#save").on("tap",function(){
-    openWindow("promotion-service-list.html","promotion-service-list")
+    openWindow("promotion-service-list.html","promotion-service-list",{
+      promotionData: vm.promotionData
+    })
   })
 	mui.plusReady(function (){
-    
+    var heard = plus.webview.currentWebview();
+    var promotionId = heard.promotionId;
+    getDetail(promotionId)
 	})
+  function getDetail(_id) {
+    doAjax("/company/promotion/info",{id: 5},function(_data) {
+      // console.log(JSON.stringify(_data));
+    	vm.promotionData = _data.info;
+    })
+  }
 </script>
 </body>
 
