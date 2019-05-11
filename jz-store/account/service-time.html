@@ -32,12 +32,18 @@
   		font-size: 12px;
   		color: #333;
       border: 1px solid #E6E6E6;
-      position: relative;
   	}
-  	.btn label.active{
+  	/* .btn label.active{
   		background-color: #7776FD;
   		color: #fff;
-  	}
+  	} */
+    .btn input {
+    	display: none;
+    }
+    .btn input[type="checkbox"]:checked+label{
+    	background-color: #7776FD;
+    	color: #fff;
+    }
   </style>
 </head>
 
@@ -49,46 +55,11 @@
 	<div id="myapp" class="mui-content" v-cloak>
     <div class="mui-card mui-padding">
       <div class="service-category-list">
-        <div class="btn">
-          <!-- <label :class="subItem.id == checkedId ? 'active' : '' "> -->
+        <div class="btn" v-for="item in serviceTime.open_week_days">
+          <input type="checkbox" name="serviceType" v-model="days" :value="item.value">
+          <!-- <label :class="isInArry(item.value) ? 'active' : '' " :data-value="item.value"> -->
           <label>
-            周一
-          </label>
-        </div>
-        <div class="btn">
-          <!-- <label :class="subItem.id == checkedId ? 'active' : '' "> -->
-          <label>
-            周二
-          </label>
-        </div>
-        <div class="btn">
-          <!-- <label :class="subItem.id == checkedId ? 'active' : '' "> -->
-          <label>
-            周一
-          </label>
-        </div>
-        <div class="btn">
-          <!-- <label :class="subItem.id == checkedId ? 'active' : '' "> -->
-          <label>
-            周一
-          </label>
-        </div>
-        <div class="btn">
-          <!-- <label :class="subItem.id == checkedId ? 'active' : '' "> -->
-          <label>
-            周一
-          </label>
-        </div>
-        <div class="btn">
-          <!-- <label :class="subItem.id == checkedId ? 'active' : '' "> -->
-          <label>
-            周一
-          </label>
-        </div>
-        <div class="btn">
-          <!-- <label :class="subItem.id == checkedId ? 'active' : '' "> -->
-          <label>
-            周一
+            {{item.title}}
           </label>
         </div>
         <div class="btn"></div>
@@ -99,13 +70,13 @@
 			<form class="mui-input-group no-border-before no-border-after">
 				<div class="mui-input-row">
 					<label>服务时间</label>
-					<input id="beginTime" class="mui-text-center" type="button" v-model="storData.start_time">
+					<input id="beginTime" class="mui-text-center" type="button" v-model="serviceTime.start_time">
 					<span>—</span>
-					<input id="endTime" class="mui-text-center" type="button" v-model="storData.end_time">
+					<input id="endTime" class="mui-text-center" type="button" v-model="serviceTime.end_time">
 				</div>
         <div class="mui-input-row">
           <label>提前预约</label>
-          <input type="text"   placeholder="提前预约(小时)" >
+          <input type="number" v-model="serviceTime.appointment_hours" placeholder="提前预约(小时)" >
         </div>
 			</form>
 		</div>
@@ -128,42 +99,61 @@
   var vm = new Vue({
   	el: '#myapp',
   	data: {
-  		storData: ""
-  	}
+  		storeData: "",
+      serviceTime: "",
+      days: []
+  	},
+    methods: {
+      isInArry: function (_id) {
+        return(vm.days.indexOf(_id) >= 0)
+      }
+    }
   })
 	mui.plusReady(function (){
 		var heard = plus.webview.currentWebview();
-    vm.storData = heard.data
+    vm.storeData = heard.data;
+    doAjax("/company/store/getWeek","",function(_data) {
+      // console.log(JSON.stringify(_data));
+      vm.serviceTime = _data;
+      for(var i in _data.open_week_days) {
+        if(_data.open_week_days[i].is_active) {
+          vm.days.push(_data.open_week_days[i].value);
+        }
+      }
+    })
 		var options = JSON.parse('{"type":"time"}');
 		var endTimePicker = new mui.DtPicker(options);
 		$("#beginTime").on("tap",function() {
 			endTimePicker.show(function(rs) {
-				vm.storData.start_time = rs.text;
+				vm.serviceTime.start_time = rs.text;
 			});
 		})
 		$("#endTime").on("tap",function() {
 			endTimePicker.show(function(rs) {
-				vm.storData.end_time = rs.text;
+				vm.serviceTime.end_time = rs.text;
 			});
 		})
 		$("#save").on("tap",function (){
-			if(vm.storData.start_time == "") {
+			if(vm.serviceTime.start_time == "") {
 				mui.toast("请选择开始时间");
 				return;
 			}
-			if(vm.storData.end_time == "") {
+			if(vm.serviceTime.end_time == "") {
 				mui.toast("请选择结束时间");
 				return;
 			}
+      if(vm.serviceTime.appointment_hours <= 0) {
+      	mui.toast("请填写提前预约小时");
+      	return;
+      }
 			plus.nativeUI.showWaiting("保存中...");
 			doAjax("/company/store/updateServiceTime",{
 				_token: UserInfo.data._token,
-				start_time: vm.storData.start_time,
-				end_time: vm.storData.end_time
+				start_time: vm.serviceTime.start_time,
+				end_time: vm.serviceTime.end_time,
+        appointment_hours: vm.serviceTime.appointment_hours,
+        open_week_days: JSON.stringify(vm.days)
 			},function(_data,_msg) {
-				mui.fire(plus.webview.getWebviewById("store"), 'get_detail', {
-					storData: vm.storData,
-				});
 				mui.toast(_msg);
 				mui.back();
 			})
