@@ -90,7 +90,8 @@
       el: '#myapp',
       data: {
         storeData: "",
-        imageData: []
+        imageData: [],
+        bannerData: []
       }
     })
     mui.plusReady(function() {
@@ -99,6 +100,8 @@
       var src = heard.imgs[heard.imgIndex];
       vm.storeData = heard.storeData;
       vm.imageData = heard.imageData;
+      vm.bannerData = heard.bannerData;
+      imageType =  heard.imageType;
       pageId = heard.pageId;
       document.getElementById("redo").addEventListener("tap", function() {
         $('#image').cropper('rotate', 90);
@@ -107,8 +110,13 @@
       document.getElementById("undo").addEventListener("tap", function() {
         $('#image').cropper('rotate', -90);
       });
+      console.log(imageType);
+      var proportion = 750 / 300;
+      if(imageType == "head") {
+        proportion = 750 / 750;
+      }
       $('#image').cropper({
-        aspectRatio: 750 / 300,
+        aspectRatio: proportion,
         //			    dragMode:'crop',
         strict: false,
         rotatable: true, //是否允许旋转

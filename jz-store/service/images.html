@@ -17,7 +17,7 @@
 		<div class="mui-card">
 			<ul class="image-list mui-clearfix">
 				<li v-if="imageData !== undefined && imageData.length>0">
-					<img :src="imageData[0].path || imageData[0]" />
+					<img :src="imageData[0].url || imageData[0]" />
 					<span v-show="isNew"><i class="mui-icon mui-icon-closeempty" @click="delImage()"></i></span>
 				</li>
 				<li v-show="isNew && imageData.length == 0" id="addImage">
@@ -31,7 +31,7 @@
 		<div class="mui-card">
 			<ul class="banner-list image-list mui-clearfix">
 				<li v-for="(item,index) in bannerData">
-					<img :src="item.path || item" />
+					<img :src="item.url || item" />
 					<span v-show="isNew"><i class="mui-icon mui-icon-closeempty" @click="delBanner(index)" :data-index="index"></i></span>
 				</li>
 				<li v-show="isNew" id="addImage2">
@@ -56,6 +56,12 @@
 <script type="text/javascript" src="../js/app.js" ></script>
 <script type="text/javascript">
 	mui.init();
+  document.addEventListener('get_img', function(event) {
+    // console.log(JSON.stringify(event.detail));
+  	vm.bannerData = event.detail.bannerData;
+  	vm.imageData = event.detail.imageData;
+    imageType = event.detail.imageType;
+  });
 	mui.plusReady(function (){
 		var heard = plus.webview.currentWebview();
 		if(heard.isNew) {
@@ -78,19 +84,21 @@
 				}
 			}
 		})
+    pageId = "images";
 		vm.imageData = vm.displayData.imgs;
 		vm.bannerData = vm.displayData.imgs2 || vm.displayData.banner_imgs;
 		$("#addImage,#addImage2").on("tap",function(){
 			if(this.id == "addImage2") {
 				imageType = "banner";
 			} else {
-				imageType = "image";
+				imageType = "head";
 			}
 			showActionSheet();
 		})
 		$("#save").on("tap",function(){
-//			vm.displayData.imgs = vm.imageData;
-//			vm.displayData.banner_imgs = vm.bannerData;
+			vm.displayData.imgs = vm.imageData;
+			vm.displayData.banner_imgs = vm.bannerData;
+			vm.displayData.imgs2 = vm.bannerData;
 			mui.fire(plus.webview.getWebviewById(heard.pageSource), 'get_detail', {
 				data: vm.displayData,
 			});

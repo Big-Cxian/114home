@@ -31,6 +31,8 @@ function galleryImgs() {
     openWindow("../set/image-cut.html","image-cut",{
       storeData: vm.storeData,
       imageData: vm.imageData,
+      bannerData: vm.bannerData,
+      imageType: imageType,
       imgs: [e],
       imgIndex: 0,
       pageId: pageId
@@ -53,6 +55,8 @@ function getImage() {
       openWindow("../set/image-cut.html","image-cut",{
         storeData: vm.storeData,
         imageData: vm.imageData,
+        bannerData: vm.bannerData,
+        imageType: imageType,
         imgs: [localurl],
         imgIndex: 0,
         pageId: pageId
@@ -111,17 +115,23 @@ function uploadeImage(_fileList) {
 	}, function(result) { //上传完成
 		plus.nativeUI.closeWaiting();
 		var resultData = JSON.parse(result.responseText);
-		  		console.log("上传完成" + JSON.stringify(resultData));
+		  		// console.log("上传完成" + JSON.stringify(resultData));
 		if(result.state == "4" && result.responseText != "") {
 			clearTimeout();
 			if(resultData.status == "1") {
 				mui.toast("上传成功");
 				resultData.data.path = _fileList[0].FilePath;
-        vm.imageData.push(resultData.data);
-        console.log(pageId);
+        if(imageType == "image" || imageType == "head") {
+					vm.imageData.push(resultData.data);
+				} else if(imageType == "banner") {
+					vm.bannerData.push(resultData.data);
+				}
+        // console.log(pageId);
         mui.fire(plus.webview.getWebviewById(pageId), 'get_img', {
           storeData: vm.storeData,
-          imageData: vm.imageData
+          imageData: vm.imageData,
+          bannerData: vm.bannerData,
+          imageType: imageType
         });
         mui.back();
 			} else {

@@ -182,19 +182,21 @@
 	function getList() {
 		doAjax("/company/service/list",{
 			_token: UserInfo.data._token,
+      type: 1,
 			page_num: 15,
 			page: vm.page,
 			status: vm.status
 		},function (_data) {
+      // console.log(JSON.stringify(_data));
 			if(vm.page == 1) {
-				vm.listData = _data;
+				vm.listData = _data.list;
 			} else {
-				if(!_data.length) {
+				if(!_data.list.length) {
 					mui.toast("没有更多数据了");
 				} else {
 					mui.toast("加载完成");
 				}
-				vm.listData = vm.listData.concat(_data);
+				vm.listData = vm.listData.concat(_data.list);
 			}
 		},"get");
 	}
