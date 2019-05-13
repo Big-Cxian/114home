@@ -88,6 +88,7 @@
       		<li class="mui-table-view-cell">
       			<a data-href="authentication.html" id="authentication" class="mui-navigate-right color333">
       				<span>我的认证</span>
+              <em class="mui-pull-right" :class="storeData.certification_status == 2 ? 'green' : 'red'">{{storeData.certification_status_text}}</em>
       			</a>
       		</li>
       	</ul>
@@ -108,7 +109,8 @@
     el: '#myapp',
     data: {
       storeData: "",
-      imageData: []
+      imageData: [],
+      authentication: ""
     }
   })
 	mui.plusReady(function (){
@@ -116,11 +118,27 @@
 		// console.log(JSON.stringify(_data));
 		vm.storeData = _data;
 	})
+  doAjax("/company/store/getCertification",{_token: UserInfo.data._token},function(_data) {
+  	// console.log(JSON.stringify(_data));
+  	vm.authentication = _data;
+  })
 	mui(".mui-table-view").on("tap","a",function () {
 		var pageUrl = $(this).data("href");
 		var pageId = $(this).attr("id");
 		if(pageId) {
-			openWindow(pageUrl,pageId,{data: vm.storeData},false)
+      if(pageId == "authentication" && vm.storeData.certification_status != 2) {
+        if(vm.storeData.certification_type == 2) {
+          pageUrl = "individual-store.html";
+          pageId = "individual-store";
+        } else if(vm.storeData.certification_type == 3) {
+          pageUrl = "enterprise-store.html";
+          pageId = "enterprise-store";
+        } else if(vm.storeData.certification_type == 1) {
+          pageUrl = "personal-store.html";
+          pageId = "personal-store";
+        }
+      }
+			openWindow(pageUrl,pageId,{data: vm.storeData,authenticationData: vm.authentication},false)
 		}
 	})
 	$("#switch").on('tap', function(event) {

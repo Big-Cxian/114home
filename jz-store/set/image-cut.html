@@ -103,6 +103,8 @@
       vm.bannerData = heard.bannerData;
       imageType =  heard.imageType;
       pageId = heard.pageId;
+      console.log(pageId);
+
       document.getElementById("redo").addEventListener("tap", function() {
         $('#image').cropper('rotate', 90);
       });
@@ -114,6 +116,8 @@
       var proportion = 750 / 300;
       if(imageType == "head") {
         proportion = 750 / 750;
+      } else if(imageType == "idcard") {
+        proportion = 856 / 540;
       }
       $('#image').cropper({
         aspectRatio: proportion,

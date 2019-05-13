@@ -27,11 +27,11 @@
 			<form class="mui-input-group no-border-before no-border-after">
 				<div class="mui-input-row">
 					<label>经营者姓名</label>
-					<input type="text" v-model="storData.name" placeholder="经营者姓名" >
+					<input type="text" v-model="authenticationData.name" placeholder="经营者姓名" >
 				</div>
         <div class="mui-input-row">
         	<label>身份证号</label>
-        	<input type="text" v-model="storData.name" placeholder="经营者身份证" >
+        	<input type="text" v-model="authenticationData.identity_id" placeholder="经营者身份证" >
         </div>
 			</form>
 		</div>
@@ -39,7 +39,7 @@
       <p class="font12 margin0">*请上传正反身份证</p>
 			<ul class="image-list mui-clearfix">
 				<li v-for="(item,index) in imageData" :id="item.id">
-					<img :src="item.path || item.url" />
+					<img :src="item.url" />
 					<span><i class="mui-icon mui-icon-closeempty" @click="delImage(index)" :data-index="index"></i></span>
 				</li>
 				<li id="addImage">
@@ -63,60 +63,65 @@
 <script type="text/javascript" src="../js/uploader.js"></script>
 <script type="text/javascript">
 	mui.init();
-	document.addEventListener('get_detail', function(event) {
-		vm.storData = event.detail.storData;
+	document.addEventListener('get_img', function(event) {
+	  console.log(JSON.stringify(event.detail));
+		vm.storeData = event.detail.storeData;
+		vm.imageData = event.detail.imageData;
 	});
+  imageType = "idcard";
+  pageId = "personal-store";
   vm = new Vue({
-  		el: '#myapp',
-  		data: {
-  			storData: "",
-  			imageData: []
-  		},
-  		methods: {
-  			delImage: function(_index) {
-  //				console.log(JSON.stringify(vm.imageData[_index]))
-  				vm.imageData.splice(_index,1);
-  			}
-  		}
-  	})
-	mui.plusReady(function (){
-	
-	mui(".mui-table-view").on("tap","a",function () {
-		var pageUrl = $(this).data("href");
-		var pageId = $(this).attr("id");
-		if(pageId) {
-			openWindow(pageUrl,pageId,{data: vm.storData},false)
-		}
-	})
-	$("#addImage").on("tap",function(){
-		showActionSheet();
-	})
-	$("#switch").on('tap', function(event) {
-		doAjax("/company/store/updateOpening",{_token: UserInfo.data._token},function(_data,_msg) {
-			mui.toast(_msg);
-			if(vm.storData.opening_status == "1") {
-				vm.storData.opening_status = "2";
-			} else {
-				vm.storData.opening_status = "1";
-			}
-		})
-	});
-	$("#save").on("tap",function(){
-		var top_imgs = [];
-		for(var i=0;i<vm.imageData.length;i++) {
-			if(vm.imageData[i].id) {
-				top_imgs.push(vm.imageData[i].id);
-			}
-		}
-		doAjax("/company/store/updateTopImgs",{_token: UserInfo.data._token,top_imgs: top_imgs.join()},function(_data,_msg) {
-			mui.fire(plus.webview.getWebviewById("tab-main.html"), 'get_detail', {
-				bannerData: vm.imageData
-			});
-			mui.toast(_msg);
-			mui.back();
-		})
+    el: '#myapp',
+    data: {
+      storeData: "",
+      authenticationData: "",
+      imageData: []
+    },
+    methods: {
+      delImage: function(_index) {
+//				console.log(JSON.stringify(vm.imageData[_index]))
+        vm.imageData.splice(_index,1);
+      }
+    }
   })
-})
+	mui.plusReady(function (){
+    var heard = plus.webview.currentWebview();
+    // console.log(JSON.stringify(heard));
+    vm.storeData = heard.data;
+    vm.imageData = vm.authenticationData.imgList1 || [];
+    vm.authenticationData = heard.authenticationData;
+    $("#addImage").on("tap",function(){
+      showActionSheet();
+    })
+    $("#save").on("tap",function(){
+      var top_imgs = [];
+      for(var i=0;i<vm.imageData.length;i++) {
+        if(vm.imageData[i].id) {
+          top_imgs.push(vm.imageData[i].id);
+        }
+      }
+      doAjax("/company/store/editStore",{
+        _token: UserInfo.data._token,
+        type: 3,
+        param: JSON.stringify({
+          type: "1", // type1 个人商家认证
+          name: vm.authenticationData.name, //经营者姓名
+          identity_id: vm.authenticationData.identity_id, //身份证好
+          imgs1: top_imgs.join()
+        })
+      },function(_data,_msg) {
+        console.log(JSON.stringify(_data));
+        vm.storeData.certification_type = 1;
+        vm.storeData.certification_status = 0;
+        vm.storeData.certification_status_text = "审核中";
+        mui.fire(plus.webview.getWebviewById("store"), 'get_detail', {
+          storeData: vm.storeData
+        });
+        mui.toast(_msg);
+        mui.back();
+      })
+    })
+  })
 </script>
 </body>
 

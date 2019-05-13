@@ -64,6 +64,7 @@ function getImage() {
 		});
 	});
 }
+        // console.log(pageId);
 //图片压缩
 function compressImage(_flies, file_index,img_left, img_top, img_width, img_height, img_rotate) {
 	var localurl = './img/' + (new Date()).getTime() + '.jpg';
@@ -121,12 +122,12 @@ function uploadeImage(_fileList) {
 			if(resultData.status == "1") {
 				mui.toast("上传成功");
 				resultData.data.path = _fileList[0].FilePath;
-        if(imageType == "image" || imageType == "head") {
+        if(imageType == "image" || imageType == "head" || imageType == "idcard") {
 					vm.imageData.push(resultData.data);
 				} else if(imageType == "banner") {
 					vm.bannerData.push(resultData.data);
 				}
-        // console.log(pageId);
+        console.log(pageId);
         mui.fire(plus.webview.getWebviewById(pageId), 'get_img', {
           storeData: vm.storeData,
           imageData: vm.imageData,

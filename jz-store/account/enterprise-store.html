@@ -75,7 +75,7 @@
       <p class="margin0 font12">*请上传营业执照相片（请确保证件完整，清晰可见）</p>
 			<ul class="image-list mui-clearfix">
 				<li v-for="(item,index) in imageData" :id="item.id">
-					<img :src="item.path || item.url" />
+					<img :src="item.url" />
 					<span><i class="mui-icon mui-icon-closeempty" @click="delImage(index)" :data-index="index"></i></span>
 				</li>
 				<li id="addImage">
@@ -89,7 +89,7 @@
       <p class="margin0 font12">*请上传正反身份证</p>
     	<ul class="image-list mui-clearfix">
     		<li v-for="(item,index) in imageData" :id="item.id">
-    			<img :src="item.path || item.url" />
+    			<img :src="item.url" />
     			<span><i class="mui-icon mui-icon-closeempty" @click="delImage(index)" :data-index="index"></i></span>
     		</li>
     		<li id="addImage">
@@ -113,9 +113,12 @@
 <script type="text/javascript" src="../js/uploader.js"></script>
 <script type="text/javascript">
 	mui.init();
-	document.addEventListener('get_detail', function(event) {
-		vm.storData = event.detail.storData;
+	document.addEventListener('get_img', function(event) {
+	  console.log(JSON.stringify(event.detail));
+		vm.storeData = event.detail.storeData;
+		vm.imageData = event.detail.imageData;
 	});
+	pageId = "enterprise-store";
   vm = new Vue({
   		el: '#myapp',
   		data: {

@@ -30,19 +30,19 @@
 			<form class="mui-input-group no-border-before no-border-after">
 				<div class="mui-input-row">
 					<label>店铺名称</label>
-					<input type="text" v-model="storeData.name" disabled="disabled" placeholder="名称" >
+					<input type="text" v-model="storeData.name" placeholder="名称" >
 				</div>
         <div class="mui-input-row height-auto">
         	<label>店铺介绍</label>
-          <textarea rows="4" readonly="readonly" v-model="storeData.description" placeholder="店铺介绍"></textarea>
+          <textarea rows="4" v-model="storeData.description" placeholder="店铺介绍"></textarea>
         </div>
 				<div class="mui-input-row">
 					<label>联系人</label>
-					<input type="text" v-model="storeData.contact_name" disabled="disabled" placeholder="姓名" >
+					<input type="text" v-model="storeData.contact_name" placeholder="姓名" >
 				</div>
 				<div class="mui-input-row">
 					<label>联系电话</label>
-					<input type="text" v-model="storeData.phone" disabled="disabled" placeholder="电话" >
+					<input type="text" v-model="storeData.phone" placeholder="电话" >
 				</div>
 			</form>
 		</div>
@@ -107,7 +107,18 @@
           top_imgs.push(vm.imageData[i].id);
         }
       }
-      doAjax("/company/store/updateTopImgs",{_token: UserInfo.data._token,top_imgs: top_imgs.join()},function(_data,_msg) {
+      doAjax("/company/store/editStore",{
+        _token: UserInfo.data._token,
+        type: 1,
+        param: JSON.stringify({
+          name: vm.storeData.name,
+          contact_name: vm.storeData.contact_name,
+          phone: vm.storeData.phone,
+          description: vm.storeData.description,
+          top_imgs: top_imgs.join()
+        })
+      },function(_data,_msg) {
+        console.log(JSON.stringify(_data));
         mui.fire(plus.webview.getWebviewById("tab-main.html"), 'get_detail', {
           bannerData: vm.imageData
         });

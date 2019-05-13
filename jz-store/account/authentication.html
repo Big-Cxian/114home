@@ -50,10 +50,16 @@
   	methods: {
   	}
   })
-  mui(".mui-content").on("tap",".mui-card",function() {
-    var pageName = $(this).data("href");
-    var pageId = $(this).data("id");
-    openWindow(pageName,pageId);
+  mui.plusReady(function (){
+    var heard = plus.webview.currentWebview();
+    mui(".mui-content").on("tap",".mui-card",function() {
+      var pageName = $(this).data("href");
+      var pageId = $(this).data("id");
+      openWindow(pageName,pageId,{
+        data: heard.data,
+        authenticationData: heard.authenticationData
+      });
+    })
   })
 </script>
 </body>

@@ -46,13 +46,13 @@
         </div>
       </form>
     </div>
-    <!-- <p class="padding-left-right font12">*请核对银行信息无误，以免影响结算</p> -->
-    <!-- <div class="mui-content-padded button-fix">
-    	<button type="button" class="mui-btn mui-btn-warning mui-btn-block buttom-button" id="save">
+    <p class="padding-left-right font12">*请核对银行信息无误，以免影响结算</p>
+    <div class="mui-content-padded button-fix">
+    	<button type="button" class="mui-btn mui-btn-royal mui-btn-block buttom-button" id="save">
     		<i class="mui-icon mui-icon-checkmarkempty"></i>
     			提交
     	</button>
-    </div> -->
+    </div>
 	</div>
 <script type="text/javascript" src="../js/mui.min.js"></script>
 <script type="text/javascript" src="../js/vue.min.js"></script>
@@ -89,25 +89,26 @@
         }
       }
     }
-    // $("#save").on("tap",function (){
-    // 	if(vm.storeData.address == "") {
-    // 		mui.toast("请输入详细地址");
-    // 		return;
-    // 	}
-    // 	doAjax("/company/store/updateAddr",{
-    // 		_token: UserInfo.data._token,
-    // 		city_id: vm.citySelected,
-    // 		address: vm.storeData.address
-    // 	},function(_data,_msg) {
-    //     // console.log(JSON.stringify(_data));
-    //     vm.storeData.city_id = vm.citySelected;
-    //     mui.fire(plus.webview.getWebviewById("store"), 'get_detail', {
-    //       storeData: vm.storeData
-    //     });
-    // 		mui.toast(_msg);
-    // 		mui.back();
-    // 	})
-    // })
+    $("#save").on("tap",function(){
+      doAjax("/company/store/editStore",{
+        _token: UserInfo.data._token,
+        type: 2,
+        param: JSON.stringify({
+          bank: vm.bankInfo.bank, //银行名称 选择
+          bank_name: vm.bankInfo.bank_name,//开户行名称
+          bank_card: vm.bankInfo.bank_card,//银行卡号
+          account_name: vm.bankInfo.account_name,
+          reserve_mobile: vm.bankInfo.reserve_mobile
+        })
+      },function(_data,_msg) {
+        console.log(JSON.stringify(_data));
+        mui.fire(plus.webview.getWebviewById("store"), 'get_detail', {
+          storeData: vm.storeData
+        });
+        mui.toast(_msg);
+        mui.back();
+      })
+    })
   })
 </script>
 </body>
