@@ -78,6 +78,7 @@ function countDown(_count) {
 		$("#getCode small").html(_count + "s后重发");
 		_count--;
 		if(_count > 0) {
+      canSend = false;
 			countDown(_count);
 		} else {
 			canSend = true;

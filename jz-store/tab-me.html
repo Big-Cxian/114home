@@ -85,6 +85,9 @@
 <script type="text/javascript" charset="utf-8">
 	mui.init();
 	mui.plusReady(function (){
+    if(localStorage.isHaveSignin == "1" && UserInfo.data.store_id == "") {
+      openWindow("account/store.html","store",null,false);
+    }
 		var vm = new Vue({
 			el: '#myapp',
 			data: {

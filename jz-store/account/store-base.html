@@ -75,15 +75,22 @@
 <script type="text/javascript">
 	mui.init();
 	document.addEventListener('get_img', function(event) {
-    // console.log(JSON.stringify(event.detail));
+    console.log(JSON.stringify(event.detail));
 		vm.storeData = event.detail.storeData;
 		vm.imageData = event.detail.imageData;
 	});
   vm = new Vue({
     el: '#myapp',
     data: {
-      storeData: "",
-      imageData: []
+      storeData: {
+        name: "", //店名
+        contact_name: "",//联系人
+        phone: "", //联系电话
+        description: "", //店铺简介
+        top_imgs_array: []
+      },
+      imageData: [],
+      isNewStore: false
     },
     methods: {
       delImage: function(_index) {
@@ -95,8 +102,10 @@
   pageId = "store-base";
   mui.plusReady(function (){
     var heard = plus.webview.currentWebview();
-    vm.storeData = heard.data;
-    vm.imageData = vm.storeData.top_imgs_array;
+    vm.storeData = heard.data || vm.storeData;
+    vm.isNewStore = heard.data == "" ? true : false;
+    // console.log(JSON.stringify(vm.storeData));
+    vm.imageData = vm.storeData.top_imgs_array || [];
     $("#addImage").on("tap",function(){
       showActionSheet();
     })
@@ -107,7 +116,8 @@
           top_imgs.push(vm.imageData[i].id);
         }
       }
-      doAjax("/company/store/editStore",{
+      var ajaxUrl = "/company/store/editStore";
+      var requestData = {
         _token: UserInfo.data._token,
         type: 1,
         param: JSON.stringify({
@@ -117,7 +127,22 @@
           description: vm.storeData.description,
           top_imgs: top_imgs.join()
         })
-      },function(_data,_msg) {
+      };
+      if(vm.isNewStore) {
+        ajaxUrl = "/company/store/addStore";
+        requestData = {
+          _token: UserInfo.data._token,
+          param: JSON.stringify({
+            name: vm.storeData.name,
+            contact_name: vm.storeData.contact_name,
+            phone: vm.storeData.phone,
+            description: vm.storeData.description,
+            top_imgs: top_imgs.join()
+          })
+        };
+      }
+      console.log(JSON.stringify(requestData));
+      doAjax(ajaxUrl,requestData,function(_data,_msg) {
         console.log(JSON.stringify(_data));
         mui.fire(plus.webview.getWebviewById("tab-main.html"), 'get_detail', {
           bannerData: vm.imageData

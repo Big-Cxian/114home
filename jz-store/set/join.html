@@ -60,7 +60,7 @@
     })
 		mui.init();
 		mui.plusReady(function (){
-			
+    var info = plus.push.getClientInfo();
 		$("#getCode").on("tap",function(){
 			if(vm.requestData.mobile == "") {
 				mui.toast('请输入手机号码');
@@ -86,7 +86,18 @@
 			}
 			doAjax("/company/companyAccount/register",vm.requestData,function(_data,_msg) {
 				mui.toast(_msg);
-				mui.back();
+        doAjax("/company/companyAccount/login",{
+          mobile: vm.requestData.mobile,
+          password: vm.requestData.password,
+          push_cid: info.clientid || ""
+        },
+        function (_data) {
+  //  		console.log(JSON.stringify(_data))
+          UserInfo.saveData(_data);
+          localStorage.isHaveSignin = "1";
+          openWindow("../index.html","index")
+        })
+				// mui.back();
 			})
     })
   })
