@@ -24,8 +24,8 @@
       <form class="mui-input-group no-border-before no-border-after">
         <div class="mui-input-row height-auto">
         	<label>选择银行</label>
-          <select name="public-choice" v-model="bankSelectedId">                                        
-              <option :value="coupon.id" v-for="coupon in bankList" >{{coupon.bank}}</option>                                    
+          <select name="public-choice" v-model="bankInfo.bank">                                        
+              <option :value="coupon.bank" v-for="coupon in bankList" >{{coupon.bank}}</option>                                    
           </select>
         </div>
         <div class="mui-input-row">
@@ -75,12 +75,12 @@
     doAjax("/company/store/getBank","",function(_data) {
       // console.log(JSON.stringify(_data));
       vm.bankInfo = _data;
-      getBankSelectedId();
+      // getBankSelectedId();
     },"get")
     doAjax("/company/bank/list","",function(_data) {
       // console.log(JSON.stringify(_data));
       vm.bankList = _data.list;
-      getBankSelectedId()
+      // getBankSelectedId()
     },"get")
     function getBankSelectedId() {
       for(var i in vm.bankList) {
@@ -90,6 +90,13 @@
       }
     }
     $("#save").on("tap",function(){
+      console.log(JSON.stringify({
+          bank: vm.bankInfo.bank, //银行名称 选择
+          bank_name: vm.bankInfo.bank_name,//开户行名称
+          bank_card: vm.bankInfo.bank_card,//银行卡号
+          account_name: vm.bankInfo.account_name,
+          reserve_mobile: vm.bankInfo.reserve_mobile
+        }));
       doAjax("/company/store/editStore",{
         _token: UserInfo.data._token,
         type: 2,

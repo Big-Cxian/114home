@@ -42,7 +42,7 @@
 					<img :src="item.url" />
 					<span><i class="mui-icon mui-icon-closeempty" @click="delImage(index)" :data-index="index"></i></span>
 				</li>
-				<li id="addImage">
+				<li id="addImage" v-show="imageData.length < 2">
 					<i class="mui-icon mui-icon-plusempty"></i>
 					<br />
 					<small>上传图片</small>

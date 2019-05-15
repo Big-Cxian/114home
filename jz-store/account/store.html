@@ -88,7 +88,7 @@
       		<li class="mui-table-view-cell">
       			<a data-href="authentication.html" id="authentication" class="mui-navigate-right color333">
       				<span>我的认证</span>
-              <em class="mui-pull-right" :class="storeData.certification_status == 2 ? 'green' : 'red'">{{storeData.certification_status_text}}</em>
+              <em class="mui-pull-right" :class="storeData.certification_status == 2 ? 'green' : 'red'">{{storeData.check_status_text || "未认证"}}</em>
       			</a>
       		</li>
       	</ul>
@@ -115,11 +115,11 @@
   })
 	mui.plusReady(function (){
 	doAjax("/company/store/info",{_token: UserInfo.data._token},function(_data) {
-		// console.log(JSON.stringify(_data));
+		console.log(JSON.stringify(_data));
 		vm.storeData = _data;
 	})
   doAjax("/company/store/getCertification",{_token: UserInfo.data._token},function(_data) {
-  	// console.log(JSON.stringify(_data));
+  	console.log(JSON.stringify(_data));
   	vm.authentication = _data;
   })
 	mui(".mui-table-view").on("tap","a",function () {
