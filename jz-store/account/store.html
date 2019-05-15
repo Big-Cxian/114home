@@ -75,7 +75,7 @@
           	</a>
           </li>
 					<li class="mui-table-view-cell">
-						<a data-href="bill-scope.html" id="bill-scope" class="mui-navigate-right">
+						<a data-href="scope.html" id="scope" class="mui-navigate-right">
 							<span>营业范围</span>
 						</a>
 					</li>
@@ -119,7 +119,7 @@
 		vm.storeData = _data;
 	})
   doAjax("/company/store/getCertification",{_token: UserInfo.data._token},function(_data) {
-  	console.log(JSON.stringify(_data));
+  	// console.log(JSON.stringify(_data));
   	vm.authentication = _data;
   })
 	mui(".mui-table-view").on("tap","a",function () {
