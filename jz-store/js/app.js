@@ -1,6 +1,6 @@
 var timeoutSet = "60000",
 	  canSend = true,
-		pubilcUrl = "http://demo.jixinghai.com/xiaobaidaojia/public/index.php",
+		pubilcUrl = "https://o2o.114yun.net/sysAdmin",
 		passWordRegex = /^(?![a-zA-z]+$)(?!\d+$)(?![!@#$%^&*]+$)(?![a-zA-z\d]+$)(?![a-zA-z!@#$%^&*]+$)(?![\d!@#$%^&*]+$)[a-zA-Z\d!@#$%^&*]+$/,
 		hanzi = /^[\u4e00-\u9fa5]+$/,
 		telRegex = /^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/,

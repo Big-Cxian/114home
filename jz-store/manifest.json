@@ -3,8 +3,8 @@
     "id" : "H5568633C", /*应用的标识，创建应用时自动生成，勿手动修改*/
     "name" : "114到家-商家端", /*应用名称，程序桌面图标名称*/
     "version" : {
-        "name" : "1.0.0", /*应用版本名称*/
-        "code" : 99
+        "name" : "1.1.0", /*应用版本名称*/
+        "code" : 111
     },
     "description" : "", /*应用描述信息*/
     "icons" : {
@@ -64,9 +64,9 @@
                 "devices" : "universal", /*iOS应用支持的设备类型，可取值iphone/ipad/universal*/
                 "frameworks" : [],
                 "privacyDescription" : {
-                    "NSPhotoLibraryUsageDescription" : "获取照片信息",
-                    "NSPhotoLibraryAddUsageDescription" : "获取照片信息",
-                    "NSCameraUsageDescription" : "用于拍摄照片",
+                    "NSPhotoLibraryUsageDescription" : "修改信息或者发布商品需要提交图片",
+                    "NSPhotoLibraryAddUsageDescription" : "可以保存喜欢的图片到相册",
+                    "NSCameraUsageDescription" : "修改信息或者发布商品需要提交图片",
                     "NSMicrophoneUsageDescription" : "用于语音输入",
                     "NSLocationWhenInUseUsageDescription" : "用于获取当前位置",
                     "NSLocationAlwaysUsageDescription" : "用于获取当前位置",
@@ -163,7 +163,7 @@
                         "notification" : "unpackage/res/icons/20x20.png",
                         "notification@2x" : "unpackage/res/icons/40x40.png"
                     },
-                    "appstore" : "unpackage/res/icons/1024x1024.png"
+                    "appstore" : "unpackage/res/到家图标.png"
                 },
                 "android" : {
                     "mdpi" : "unpackage/res/icons/48x48.png", /*普通屏程序图标，分辨率：48x48*/
