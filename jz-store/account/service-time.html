@@ -32,17 +32,20 @@
   		font-size: 12px;
   		color: #333;
       border: 1px solid #E6E6E6;
+      position: relative;
   	}
-  	/* .btn label.active{
-  		background-color: #7776FD;
-  		color: #fff;
-  	} */
     .btn input {
     	display: none;
     }
     .btn input[type="checkbox"]:checked+label{
     	background-color: #7776FD;
     	color: #fff;
+    }
+    .btn input[type="checkbox"]:checked+label::after{
+      content: '\e472';
+      position: absolute;
+    	color: #fff;
+      font-size: 20px;
     }
   </style>
 </head>
@@ -54,11 +57,17 @@
 	</header>
 	<div id="myapp" class="mui-content" v-cloak>
     <div class="mui-card mui-padding">
+      <p class="font12 color999 padding-left-right">请选择接单星期</p>
       <div class="service-category-list">
+        <div class="btn">
+          <input type="checkbox" name="serviceType" checked="checked">
+          <label class="mui-icon">
+            星期1
+          </label>
+        </div>
         <div class="btn" v-for="item in serviceTime.open_week_days">
           <input type="checkbox" name="serviceType" v-model="days" :value="item.value">
-          <!-- <label :class="isInArry(item.value) ? 'active' : '' " :data-value="item.value"> -->
-          <label>
+          <label class="mui-icon">
             {{item.title}}
           </label>
         </div>

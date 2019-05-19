@@ -97,6 +97,7 @@
 		vm.user = UserInfo.data;
 		document.addEventListener('get_detail', function(event) {
 			doAjax("/company/companyAccount/info",{_token: UserInfo.data._token},function(_data) {
+        // console.log(JSON.stringify(_data));
 				vm.user = _data;
 				UserInfo.saveData(_data);
 				UserInfo.init();

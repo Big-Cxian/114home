@@ -1,0 +1,106 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<link rel="stylesheet" href="../css/mui.min.css" />
+	<link rel="stylesheet" href="../css/app.css" />
+  <style type="text/css">
+    html,body {
+      height: 100%;
+    }
+    .mui-content {
+      padding-left: 15px;
+      padding-right: 15px;
+    }
+    .cash-out-list,
+    .entry-list {
+      overflow-y: scroll;
+    }
+    ul li:last-child {
+      border-bottom: 0;
+    }
+    .fiance-total p {
+      font-size: 12px;
+      color: #fff;
+    }
+    .order-list-flex {
+      display: flex;
+      flex-flow: wrap;
+    }
+    .order-list-flex>div {
+      width: 50%;
+    }
+    .entry-list-flex.margin-bottom-10 {
+      background-color: #eee;
+    }
+    .finance-detail>.order-list-flex {
+      padding: 10px 0;
+    }
+    .finance-detail>.order-list-flex>div {
+      padding: 3px 0;
+    }
+  </style>
+</head>
+
+<body>
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"><span class="font14">返回</span></a>
+		<h1 class="mui-title">结算明细</h1>
+	</header>
+	<div id="myapp" class="mui-content" v-cloak>
+    <div class="finance-detail">
+      <div class="order-list-flex">
+        <div class="color666">订单数量：{{offlineData.order_count}}</div>
+        <div class="color666">订单金额：￥{{offlineData.total_pay_amount}}</div>
+        <div class="color666">平台分成：￥{{offlineData.info.amount}}</div>
+        <div></div>
+        <div class="color666" style="width: 100%;">结算时间：<strong></strong>{{offlineData.info.handle_time}}</div>
+      </div>
+      <ul class="entry-list" >
+      	<li v-for="enterItem in offlineData.order_list" :key="enterItem.id" :data-id="enterItem.id">
+          <div class="entry-list-flex margin-bottom-10">
+            <div class="font14 color666">{{enterItem.number}}</div>
+            <div class="font12 color999">{{enterItem.status_text}}</div>
+          </div>
+          <div class="order-list-flex">
+            <div class="font12 color999">订单金额：￥{{enterItem.total_pay_amount}}</div>
+            <div class="font12 color999">配件费：￥{{enterItem.part_amount}}</div>
+            <div class="font12 color999">平台入账：￥{{enterItem.platform_amount}}</div>
+            <div class="font12 color999">店铺入账：￥{{enterItem.store_amount}}</div>
+          </div>
+          <div class="font12 color999">{{enterItem.create_time}}</div>
+        </li>
+        <li class="mui-text-center" v-if="offlineData.order_list.length == 0">
+          没有线下结算记录
+        </li>
+      </ul>
+    </div>
+	</div>
+<script type="text/javascript" src="../js/mui.min.js"></script>
+<script type="text/javascript" src="../js/vue.min.js"></script>
+<script type="text/javascript" src="../js/jquery-3.3.1.min.js" ></script>
+<script type="text/javascript" src="../js/app.js" ></script>
+<script type="text/javascript">
+	mui.init();
+  var vm = new Vue({
+  	el: '#myapp',
+  	data: {
+      offlineData: {
+        order_list: [],
+        info: ""
+      }
+  	}
+  })
+	mui.plusReady(function (){
+    var heard = plus.webview.currentWebview();
+    doAjax("/company/finance/s-info",{id: heard.enterId},function(_data){
+      // console.log(JSON.stringify(_data));
+      vm.offlineData = _data;
+    },"get")
+  })
+</script>
+</body>
+
+</html>

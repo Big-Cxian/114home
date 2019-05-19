@@ -45,7 +45,7 @@
   })
   $(".mui-content").on("tap",".promotion-list",function(){
     var promotionId = $(this).data("pid");
-    if(!$(this).hasClass("over")) return;
+    if($(this).hasClass("over")) return;
     openWindow("promotion-detail.html","promotion-detail",{
       promotionId: promotionId
     })

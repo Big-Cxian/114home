@@ -63,7 +63,7 @@
 			</div>
 		</div>
 		<div class="mui-card mui-padding margin-top-5">
-			<button type="button" class="mui-btn buttom-button mui-btn-primary mui-btn-outlined" v-for="(item,index) in showTime" :class="item.status == 1?'active':''" @click="changeStatus(index)">
+			<button type="button" class="mui-btn buttom-button mui-btn-primary mui-btn-outlined" v-for="(item,index) in showTime" :class="item.status == 1?'active':''" @click="changeStatus(index)" v-show="item.isHide">
 				{{item.time}}
 				<span class="mui-badge" v-show="item.status == 1">忙</span>
 			</button>
@@ -92,6 +92,22 @@
   	watch: {
   		showIndex: {
   			handler: function(nvl,ovl) {
+          if(nvl == 0) {
+            var today = new Date();
+            var h = today.getHours();
+            h = 10
+            var m = today.getMinutes();
+            var timeList = vm.timeData[nvl].children;
+            for(i in timeList) {
+              if(parseInt(timeList[i].time.split(":")[0]) < h) {
+                timeList[i].isHide = true;
+              } else if(parseInt(timeList[i].time.split(":")[0]) == h) {
+                if(parseInt(timeList[i].time.split(":")[1]) < m) {
+                  timeList[i].isHide = true;
+                }
+              }
+            }
+          }
   				this.showTime = vm.timeData[nvl].children;
   			},
   			deep: true

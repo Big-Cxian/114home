@@ -56,7 +56,7 @@
         </div>
         <div class="mui-input-row height-auto">
         	<label>法人姓名</label>
-        	<input type="text" v-model="authenticationData.name" placeholder="请输入姓名" >
+        	<input type="text" v-model="authenticationData.identity_name" placeholder="请输入姓名" >
         </div>
         <div class="mui-input-row height-auto">
         	<label>法人身份证号</label>
@@ -189,7 +189,7 @@
         type: 3,
         param: JSON.stringify({
           type: "2", //2 个体商家认证审核
-          name: vm.authenticationData.name, //法人姓名
+          identity_name: vm.authenticationData.name, //法人姓名
           identity_id: vm.authenticationData.identity_id,//法人身份证号
           license_name: vm.authenticationData.license_name, //营业执照名称
           credit_code: vm.authenticationData.credit_code, //统一社会信用代码

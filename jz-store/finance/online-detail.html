@@ -1,0 +1,184 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<link rel="stylesheet" href="../css/mui.min.css" />
+	<link rel="stylesheet" href="../css/app.css" />
+  <style type="text/css">
+    html,body {
+      height: 100%;
+    }
+    .cash-out-list,
+    .entry-list {
+      overflow-y: scroll;
+    }
+    ul li:last-child {
+      border-bottom: 0;
+    }
+    .fiance-total p {
+      font-size: 12px;
+      color: #fff;
+    }
+    .order-list-flex {
+      display: flex;
+      flex-flow: wrap;
+    }
+    .order-list-flex>div {
+      width: 50%;
+    }
+    .entry-list-flex.margin-bottom-10 {
+      background-color: #eee;
+    }
+    .finance-detail>.order-list-flex {
+      padding: 10px 0;
+    }
+    .finance-detail>.order-list-flex>div {
+      padding: 3px 0;
+    }
+    .white {
+      color: #fff;
+    }
+    #goDraw {
+      float: right;
+      width: 66px;
+      height: 30px;
+      padding: 0;
+      margin: 0;
+      font-size: 12px;
+      line-height: 30px;
+      text-align: center;
+      color: #fff;
+      border: 0;
+      border-radius: 15px;
+      background-color: #FF5252;
+    }
+    .cash-out-account {
+      padding: 25px 25px 15px 25px;
+    }
+    .finance-tab {
+      background-color: #fff;
+    }
+  </style>
+</head>
+
+<body>
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"><span class="font14">返回</span></a>
+		<h1 class="mui-title">线上结算</h1>
+	</header>
+	<div id="myapp" class="mui-content" v-cloak>
+    <div class="finance-tab">
+      <div class="finance-tab-item" :class="type == 'cash' ? 'active' : ''" @click="changeType('cash')">可提现信息</div>
+      <div class="finance-tab-item" :class="type == 'money' ? 'active' : ''" @click="changeType('money')">可结算信息</div>
+    </div>
+    <div class="padding-left-right" v-show="type == 'cash'">
+      <div class="cash-out-account">
+        {{onlineData.bank.bank}}
+        <button id="goDraw">提现</button>
+        <div>{{onlineData.bank.bank_card || "0000" | secrecy}}</div>
+        <div class="order-list-flex">
+          <div class="white font12">订单数量：{{onlineData.order_count}}</div>
+          <div class="white font12">订单金额：￥{{onlineData.amount}}</div>
+        </div>
+      </div>
+      <div class="finance-detail margin-top-10">
+       <!-- <div class="order-list-flex">
+          <div class="color666">订单数量：{{onlineData.order_count}}</div>
+          <div class="color666">订单金额：￥{{onlineData.amount}}</div>
+          <div class="color666">平台分成：￥{{onlineData.info.amount}}</div>
+          <div></div>
+          <div class="color666" style="width: 100%;">结算时间：<strong></strong>{{onlineData.info.handle_time}}</div>
+        </div> -->
+        <ul class="entry-list no-border" >
+          <li v-for="enterItem in onlineData.list" :key="enterItem.id" :data-id="enterItem.id">
+            <div class="entry-list-flex margin-bottom-10">
+              <div class="font14 color666">{{enterItem.number}}</div>
+              <div class="font12 color999">{{enterItem.status_text}}</div>
+            </div>
+            <div class="order-list-flex">
+              <div class="font12 color999">订单金额：￥{{enterItem.total_pay_amount}}</div>
+              <div class="font12 color999">配件费：￥{{enterItem.part_amount}}</div>
+              <div class="font12 color999">平台入账：￥{{enterItem.platform_amount}}</div>
+              <div class="font12 color999">店铺入账：￥{{enterItem.store_amount}}</div>
+            </div>
+            <div class="font12 color999">{{enterItem.create_time}}</div>
+          </li>
+          <li class="mui-text-center" v-if="onlineData.list.length == 0">
+            没有线上结算记录
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="padding-left-right" v-show="type == 'money'">
+      <div class="finance-detail">
+        <div class="order-list-flex">
+          <div class="color666">订单数量：{{moneyData.order_count}}</div>
+          <div class="color666">订单金额：￥{{moneyData.amount}}</div>
+        </div>
+        <ul class="entry-list" >
+          <li v-for="enterItem in moneyData.list" :key="enterItem.id" :data-id="enterItem.id">
+            <div class="entry-list-flex margin-bottom-10">
+              <div class="font14 color666">{{enterItem.number}}</div>
+              <div class="font12 color999">{{enterItem.status_text}}</div>
+            </div>
+            <div class="order-list-flex">
+              <div class="font12 color999">订单金额：￥{{enterItem.total_pay_amount}}</div>
+              <div class="font12 color999">配件费：￥{{enterItem.part_amount}}</div>
+              <div class="font12 color999">平台入账：￥{{enterItem.platform_amount}}</div>
+              <div class="font12 color999">店铺入账：￥{{enterItem.store_amount}}</div>
+            </div>
+            <div class="font12 color999">{{enterItem.create_time}}</div>
+          </li>
+          <li class="mui-text-center" v-if="moneyData.list.length == 0">
+            没有可结算记录
+          </li>
+        </ul>
+      </div>
+    </div>
+	</div>
+<script type="text/javascript" src="../js/mui.min.js"></script>
+<script type="text/javascript" src="../js/vue.min.js"></script>
+<script type="text/javascript" src="../js/jquery-3.3.1.min.js" ></script>
+<script type="text/javascript" src="../js/app.js" ></script>
+<script type="text/javascript">
+	mui.init();
+  var vm = new Vue({
+  	el: '#myapp',
+  	data: {
+      type: "cash",
+      onlineData: {
+        list: [],
+        bank: ""
+      },
+      moneyData: {
+        list: []
+      }
+  	},
+    methods: {
+      changeType: function(_type) {
+        this.type = _type;
+      },
+    },
+    filters: {
+      secrecy: function(_val) {
+        return "尾号" + _val.substr(_val.length - 4) + "存蓄卡"
+      }
+    }
+  })
+	mui.plusReady(function (){
+    var heard = plus.webview.currentWebview();
+    doAjax("/company/finance/withdraw-info",{id: heard.withdrawId},function(_data){
+      // console.log(JSON.stringify(_data));
+      vm.onlineData = _data;
+    },"get")
+    doAjax("/company/finance/settlement-info",{id: heard.withdrawId},function(_data){
+      console.log(JSON.stringify(_data));
+      vm.moneyData = _data;
+    },"get")
+  })
+</script>
+</body>
+
+</html>

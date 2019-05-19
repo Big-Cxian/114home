@@ -21,6 +21,20 @@
     ul li:last-child {
       border-bottom: 0;
     }
+    .fiance-total p {
+      font-size: 12px;
+      color: #fff;
+    }
+    .order-list-flex {
+      display: flex;
+      flex-flow: wrap;
+    }
+    .order-list-flex>div {
+      width: 50%;
+    }
+    .entry-list-flex.margin-bottom-10 {
+      background-color: #eee;
+    }
   </style>
 </head>
 
@@ -34,7 +48,8 @@
     	<div class="fiance-tilte margin-bottom-10">账户余额</div>
     	<div class="fiance-total">
         <div>
-          ￥<span>{{financeInfo.balance || "0.00"}}</span>
+          ￥<span>{{financeInfo.totalPrice || "0.00"}}</span>
+          <p>含线下收入￥{{financeInfo.offline || "0.00"}}</p>
         </div>
         <div>
           <button id="goDraw">提现</button>
@@ -42,25 +57,32 @@
       </div>
     	<div class="fiance-money">
         <div>
-          <div class="fiance-tilte">累计入账金额</div>
+          <div class="fiance-tilte">累计线上金额</div>
           <div class="fiance-money-text">
-            ￥<span>{{financeInfo.countEnterBalance || "0.00"}}</span>
+            ￥<span>{{financeInfo.onlineTotal || "0.00"}}</span>
           </div>
         </div>
         <div>
-          <div class="fiance-tilte">累计提现金额</div>
+          <div class="fiance-tilte">累计线下金额</div>
           <div class="fiance-money-text">
-            ￥<span>{{financeInfo.countExtractBalance || "0.00"}}</span>
+            ￥<span>{{financeInfo.offlineTotal || "0.00"}}</span>
+          </div>
+        </div>
+        <div>
+          <div class="fiance-tilte">合计收入金额</div>
+          <div class="fiance-money-text">
+            ￥<span>{{financeInfo.total || "0.00"}}</span>
           </div>
         </div>
       </div>
     </div>
     <div class="finance-detail">
       <div class="finance-tab">
-        <div class="finance-tab-item" :class="type == 'out' ? 'active' : ''" @click="changeType('out')">提现记录</div>
-        <div class="finance-tab-item" :class="type == 'in' ? 'active' : ''" @click="changeType('in')">入账明细</div>
+        <div class="finance-tab-item" :class="type == 'online' ? 'active' : ''" @click="changeType('online')">线上结算</div>
+        <div class="finance-tab-item" :class="type == 'offline' ? 'active' : ''" @click="changeType('offline')">线下结算</div>
+        <div class="finance-tab-item" :class="type == 'orderlist' ? 'active' : ''" @click="changeType('orderlist')">订单明细</div>
       </div>
-      <ul class="cash-out-list" v-show="type == 'out'">
+      <ul class="cash-out-list" v-show="type == 'online'">
       	<li v-for="drawItem in withdrawList" :key="drawItem.id" :data-id="drawItem.id">
           <div class="cash-out-list-flex">
             <div>
@@ -73,14 +95,54 @@
           </div>
         </li>
         <li class="mui-text-center" v-if="withdrawList.length == 0">
-          没有提现记录
+          没有线上结算记录
         </li>
         <li class="mui-text-center" @click="getMoreDraw" v-else>
-          {{moreDraw ? "点击加载跟多" : "没有更多数据了"}}
+          {{moreDraw ? "点击加载更多" : "没有更多数据了"}}
         </li>
       </ul>
-      <ul class="entry-list" v-show="type == 'in'">
-      	<li v-for="enterItem in enterList" :key="enterItem.id" :data-id="enterItem.id">
+      <ul class="entry-list offline-list" v-show="type == 'offline'">
+        <li v-for="drawItem in enterList" :key="drawItem.id" :data-id="drawItem.id">
+          <div class="cash-out-list-flex">
+            <div>
+              <p class="color333 bold margin0">￥<span class="font16">{{drawItem.amount}}</span></p>
+              <div class="font12 color999 margin-top-5">{{drawItem.create_time}}</div>
+            </div>
+            <span class="color666">{{drawItem.status_text}}
+              <i class="mui-icon mui-icon-arrowright font14"></i>
+            </span>
+          </div>
+        </li>
+        <li class="mui-text-center" v-if="enterList.length == 0">
+          没有线下结算记录
+        </li>
+        <li class="mui-text-center" @click="getMoreEnter" v-else>
+          {{moreEnter ? "点击加载更多" : "没有更多数据了"}}
+        </li>
+      </ul>
+      <ul class="entry-list" v-show="type == 'orderlist'">
+      	<li v-for="enterItem in orderList" :key="enterItem.id" :data-id="enterItem.id">
+          <div class="entry-list-flex margin-bottom-10">
+            <div class="font14 color666">{{enterItem.number}}</div>
+            <div class="font12 color999">{{enterItem.status_text}}</div>
+          </div>
+          <div class="order-list-flex">
+            <div class="font12 color999">订单金额：￥{{enterItem.total_pay_amount}}</div>
+            <div class="font12 color999">配件费：￥{{enterItem.part_amount}}</div>
+            <div class="font12 color999">平台入账：￥{{enterItem.platform_amount}}</div>
+            <div class="font12 color999">店铺入账：￥{{enterItem.store_amount}}</div>
+          </div>
+          <div class="font12 color999">{{enterItem.create_time}}</div>
+        </li>
+        <li class="mui-text-center" v-if="orderList.length == 0">
+          没有订单明细记录
+        </li>
+        <li class="mui-text-center" @click="getMoreEnter" v-else>
+          {{moreEnter ? "点击加载更多" : "没有更多数据了"}}
+        </li>
+      </ul>
+      <!-- <ul class="entry-list" v-show="type == 'orderlist'">
+      	<li v-for="enterItem in orderList" :key="enterItem.id" :data-id="enterItem.id">
           <div class="entry-list-flex margin-bottom-10">
             <div class="font14 color666">{{enterItem.start_end}}</div>
             <div class="font12 color999">订单数：{{enterItem.order_num}}</div>
@@ -92,13 +154,13 @@
             </div>
           </div>
         </li>
-        <li class="mui-text-center" v-if="enterList.length == 0">
-          没有入账记录
+        <li class="mui-text-center" v-if="orderList.length == 0">
+          没有订单明细记录
         </li>
         <li class="mui-text-center" @click="getMoreEnter" v-else>
-          {{moreEnter ? "点击加载跟多" : "没有更多数据了"}}
+          {{moreEnter ? "点击加载更多" : "没有更多数据了"}}
         </li>
-      </ul>
+      </ul> -->
     </div>
 	</div>
 <script type="text/javascript" src="../js/mui.min.js"></script>
@@ -107,28 +169,32 @@
 <script type="text/javascript" src="../js/app.js" ></script>
 <script type="text/javascript">
 	mui.init();
-  if($(".entry-list").height() < (document.body.clientHeight - 300)) {
-    $(".entry-list").css({height: (document.body.clientHeight - 300) + "px"})
+  if($(".entry-list").height() < (document.body.clientHeight - 310)) {
+    $(".entry-list").css({height: (document.body.clientHeight - 310) + "px"})
   }
-  if($(".cash-out-list").height() < (document.body.clientHeight - 300)) {
-    $(".cash-out-list").css({height: (document.body.clientHeight - 300) + "px"})
+  if($(".cash-out-list").height() < (document.body.clientHeight - 310)) {
+    $(".cash-out-list").css({height: (document.body.clientHeight - 310) + "px"})
   }
   window.addEventListener("reload",function(){
     getFinanceInfo();
     getDrawList();
     enterList();
+    orderList();
   })
   var vm = new Vue({
   	el: '#myapp',
   	data: {
-  		type: "out",
+  		type: "online",
       financeInfo: "",
       withdrawList: [],
       enterList: [],
+      orderList: [],
+      orderPage: 1,
       withdrawPage: 1,
       enterPage: 1,
       moreDraw: true,
-      moreEnter: true
+      moreEnter: true,
+      moreOrder: true
   	},
     methods: {
       changeType: function(_type) {
@@ -143,6 +209,11 @@
         if(!vm.moreEnter) return;
         vm.enterPage++;
         enterList();
+      },
+      getMoreOrder: function(){
+        if(!vm.moreOrder) return;
+        vm.orderPage++;
+        orderList();
       }
     }
   })
@@ -150,15 +221,16 @@
     getFinanceInfo();
     getDrawList();
     enterList();
+    orderList();
     $(".cash-out-list").on("tap","li",function(){
       if(!$(this).data("id")) return;
-      openWindow("withdraw-detail.html","withdraw-detail",{
+      openWindow("online-detail.html","online-detail",{
         withdrawId: $(this).data("id")
       })
     })
-    $(".entry-list").on("tap","li",function(){
+    $(".offline-list").on("tap","li",function(){
       if(!$(this).data("id")) return;
-      openWindow("enter-detail.html","enter-detail",{
+      openWindow("offline-detail.html","offline-detail",{
         enterId: $(this).data("id")
       })
     })
@@ -169,34 +241,47 @@
     })
   })
   function getFinanceInfo() {
-    doAjax("/company/store/financeInfo",{_token: UserInfo.data._token},function(_data){
+    doAjax("/company/finance/info",{_token: UserInfo.data._token},function(_data){
       // console.log(JSON.stringify(_data));
       vm.financeInfo = _data;
-    })
+    },"get")
   }
   function getDrawList() {
-    doAjax("/company/withdraw/list",{page_num: 15,page: vm.withdrawPage},function(_data){
+    doAjax("/company/finance/withdraw-list",{page_num: 15,page: vm.withdrawPage},function(_data){
       // console.log(JSON.stringify(_data));
       if(vm.withdrawPage == 1) {
-        vm.withdrawList = _data;
+        vm.withdrawList = _data.list;
       } else {
-        vm.withdrawList = vm.withdrawList.concat(_data);
+        vm.withdrawList = vm.withdrawList.concat(_data.list);
       }
-      if(_data.length < 15) {
+      if(_data.list.length < 15) {
         vm.moreDraw = false;
       }
     },"get")
   }
   function enterList() {
-    doAjax("/company/financeLog/enterList",{page_num: 15,page: vm.enterPage},function(_data){
+    doAjax("/company/finance/settlement-list",{page_num: 15,page: vm.enterPage},function(_data){
       // console.log(JSON.stringify(_data));
       if(vm.enterPage == 1) {
-        vm.enterList = _data;
+        vm.enterList = _data.list;
       } else {
-        vm.enterList = vm.enterList.concat(_data);
+        vm.enterList = vm.enterList.concat(_data.list);
       }
-      if(_data.length < 15) {
+      if(_data.list.length < 15) {
         vm.moreEnter = false;
+      }
+    },"get")
+  }
+  function orderList() {
+    doAjax("/company/finance/order-list",{page_num: 15,page: vm.enterPage},function(_data){
+      console.log(JSON.stringify(_data));
+      if(vm.orderPage== 1) {
+        vm.orderList = _data.list;
+      } else {
+        vm.orderList = vm.orderList.concat(_data.list);
+      }
+      if(_data.list.length < 15) {
+        vm.moreOrder = false;
       }
     },"get")
   }

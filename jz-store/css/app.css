@@ -809,7 +809,7 @@ textarea {
   display: flex;
   justify-content: space-between;
   flex-flow: wrap;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 .fiance-total>div,
 .fiance-money-text {
@@ -840,7 +840,7 @@ textarea {
   flex-flow: wrap;
 }
 .fiance-money>div {
-  width: 50%;
+  width: 33%;
 }
 .fiance-money .fiance-tilte {
   margin-bottom: 5px;
@@ -856,7 +856,7 @@ textarea {
 .finance-tab {
   padding: 10px 0 0 0;
   margin: 0 auto;
-  width: 50%;
+  width: 100%;
   display: flex;
   justify-content: space-around;
 }

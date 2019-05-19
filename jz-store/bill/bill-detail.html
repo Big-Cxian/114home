@@ -268,7 +268,7 @@
 					服务金额
 				</span>
 				<span class="color333">
-					¥{{price_type == 1 ? Number(displayData.dispose).toFixed(2) : (displayData.unit_price * displayData.count).toFixed(2)}}
+					¥{{price_type == 1 ? Number(displayData.dispose || "0").toFixed(2) : Number(displayData.amount).toFixed(2)}}
 				</span>
 			</div>
 			<div class="mui-table-view-cell mui-collapse" style="padding: 11px 0;" v-show="displayData.detail_list && displayData.detail_list.length > 0">
@@ -290,7 +290,7 @@
 					服务金额(总价)
 				</span>
 				<span class="bold font16 red">
-					¥{{displayData.amount}}
+					¥{{displayData.amount || "0.00"}}
 				</span>
 			</div>
 		</div>
@@ -346,7 +346,7 @@
 			</div>
 		</div>
 		<div class="mui-content-padded margin-top-20 margin-bottom-20 mui-text-center">
-			<button class="mui-btn mui-btn-purple buttom-button mui-btn-block mui-padding" v-if="displayData.canToProvider && displayData.status != 50" id="change2">分配工程师</button>
+			<button class="mui-btn mui-btn-purple buttom-button mui-btn-block mui-padding" v-if="displayData.status == 40" id="change2">分配工程师</button>
 			<button class="mui-btn mui-btn-purple buttom-button mui-btn-block mui-padding" v-if="displayData.canArrive" id="arrive">确认到达</button>
 			<button class="mui-btn mui-btn-purple buttom-button mui-btn-block mui-padding" v-if="displayData.canStartService" id="startService">开始服务</button>
 			<button class="mui-btn mui-btn-purple buttom-button mui-btn-block mui-padding" v-if="(displayData.canPay || displayData.canFinishService) && displayData.status != 10" id="goService">确认完成</button>
@@ -387,7 +387,7 @@
     });
 		function getDetail() {
 			doAjax("/company/order/info",{_token: UserInfo.data._token,id: heard.billId},function(_data) {
-//			console.log(JSON.stringify(_data))
+			// console.log(JSON.stringify(_data))
 				vm.displayData = _data;
 				vm.displayData.amount = Number(vm.displayData.amount).toFixed(2);
 				switch(vm.displayData.status){

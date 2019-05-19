@@ -27,7 +27,7 @@
 			<form class="mui-input-group no-border-before no-border-after">
 				<div class="mui-input-row">
 					<label>经营者姓名</label>
-					<input type="text" v-model="authenticationData.name" placeholder="经营者姓名" >
+					<input type="text" v-model="authenticationData.identity_name" placeholder="经营者姓名" >
 				</div>
         <div class="mui-input-row">
         	<label>身份证号</label>
@@ -105,7 +105,7 @@
         type: 3,
         param: JSON.stringify({
           type: "1", // type1 个人商家认证
-          name: vm.authenticationData.name, //经营者姓名
+          identity_name: vm.authenticationData.name, //经营者姓名
           identity_id: vm.authenticationData.identity_id, //身份证好
           imgs1: top_imgs.join()
         })
